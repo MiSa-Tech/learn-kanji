@@ -1,0 +1,31 @@
+type Query {
+    findUserByUsername(username: String!): User
+    findAllUsers: [User]!
+}
+
+type User {
+    id: ID!
+    username: String!
+}
+
+type Kanji {
+    id: ID!
+    stroke: Int!
+    grade: Int!
+    frequency: Int!
+    jlpt: Int!
+    meaning: String!
+    part_of: [Vocabulary!]
+}
+
+type Vocabulary {
+    id: ID!
+    original: String!
+    furigana: String!
+    meaning: String!
+    jlpt: Int!
+}
+
+type Mutation {
+    createUser(username: String!): User!
+}
