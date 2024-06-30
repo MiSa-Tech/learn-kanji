@@ -4,6 +4,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Node("Kanji")
@@ -19,21 +20,30 @@ public class Kanji extends BaseEntity {
     @Property("jlpt")
     private Integer jlpt;
     @Property("meaning")
-    private String meaning;
-    @Relationship("part_of")
-    private List<Vocabulary> partOf;
+    private List<String> meaning = new ArrayList<>();
+    @Property("readings_on")
+    private List<String> readingsOn = new ArrayList<>();
+    @Property("readings_kun")
+    private List<String> readingsKun = new ArrayList<>();
+    @Relationship(type = "PART_OF", direction = Relationship.Direction.OUTGOING)
+    private List<Vocabulary> partOf = new ArrayList<>();
 
     public Kanji() {
     }
 
-    public Kanji(String id, String value, Integer stroke, Integer grade, Integer frequency, Integer jlpt, String meaning) {
-        super(id);
+    public Kanji(String value,
+                 Integer stroke, Integer grade,
+                 Integer frequency, Integer jlpt,
+                 List<String> meaning, List<String> readingsOn,
+                 List<String> readingsKun) {
         this.value = value;
         this.stroke = stroke;
         this.grade = grade;
         this.frequency = frequency;
         this.jlpt = jlpt;
         this.meaning = meaning;
+        this.readingsOn = readingsOn;
+        this.readingsKun = readingsKun;
     }
 
     public String getValue() {
@@ -76,12 +86,12 @@ public class Kanji extends BaseEntity {
         this.jlpt = jlpt;
     }
 
-    public String getMeaning() {
+    public List<String> getMeaning() {
         return meaning;
     }
 
-    public void setMeaning(String meaning) {
-        this.meaning = meaning;
+    public void addMeaning(String meaning) {
+        this.meaning.add(meaning);
     }
 
     public List<Vocabulary> getPartOf() {
@@ -90,5 +100,25 @@ public class Kanji extends BaseEntity {
 
     public void setPartOf(List<Vocabulary> partOf) {
         this.partOf = partOf;
+    }
+
+    public void addPartOf(Vocabulary vocabulary) {
+        this.partOf.add(vocabulary);
+    }
+
+    public List<String> getReadingsOn() {
+        return readingsOn;
+    }
+
+    public void addReadingsOn(String readingsOn) {
+        this.readingsOn.add(readingsOn);
+    }
+
+    public List<String> getReadingsKun() {
+        return readingsKun;
+    }
+
+    public void addReadingsKun(String readingsKun) {
+        this.readingsKun.add(readingsKun);
     }
 }

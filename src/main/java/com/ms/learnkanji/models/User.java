@@ -2,6 +2,10 @@ package com.ms.learnkanji.models;
 
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
+import org.springframework.data.neo4j.core.schema.Relationship;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Node("User")
 public class User extends BaseEntity {
@@ -9,12 +13,15 @@ public class User extends BaseEntity {
     private String username;
     @Property("jlpt")
     private Integer jlpt;
+    @Relationship(type = "LEARNT_KANJI", direction = Relationship.Direction.OUTGOING)
+    private List<Kanji> kanjis = new ArrayList<>();
+    @Relationship(type = "LEARNT_VOCABULARY", direction = Relationship.Direction.OUTGOING)
+    private List<Vocabulary> vocabularies = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String id, String username, Integer jlpt) {
-        super(id);
+    public User(String username, Integer jlpt) {
         this.username = username;
         this.jlpt = jlpt;
     }
@@ -33,5 +40,29 @@ public class User extends BaseEntity {
 
     public void setJlpt(Integer jlpt) {
         this.jlpt = jlpt;
+    }
+
+    public List<Kanji> getKanjis() {
+        return kanjis;
+    }
+
+    public void setKanjis(List<Kanji> kanjis) {
+        this.kanjis = kanjis;
+    }
+
+    public void addKanji(Kanji kanji) {
+        this.kanjis.add(kanji);
+    }
+
+    public List<Vocabulary> getVocabularies() {
+        return vocabularies;
+    }
+
+    public void setVocabularies(List<Vocabulary> vocabularies) {
+        this.vocabularies = vocabularies;
+    }
+
+    public void addVocabulary(Vocabulary vocabulary) {
+        this.vocabularies.add(vocabulary);
     }
 }

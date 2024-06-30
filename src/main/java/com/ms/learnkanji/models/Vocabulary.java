@@ -3,22 +3,26 @@ package com.ms.learnkanji.models;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Property;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Node("Vocabulary")
 public class Vocabulary extends BaseEntity {
     @Property("original")
     private String original;
     @Property("furigana")
-    private String furigana;
+    private List<String> furigana = new ArrayList<>();
     @Property("meaning")
-    private String meaning;
+    private List<String> meaning = new ArrayList<>();
     @Property("jlpt")
     private Integer jlpt;
 
     public Vocabulary() {
     }
 
-    public Vocabulary(String id, String original, String furigana, String meaning, Integer jlpt) {
-        super(id);
+    public Vocabulary(String original,
+                      List<String> furigana, List<String> meaning,
+                      Integer jlpt) {
         this.original = original;
         this.furigana = furigana;
         this.meaning = meaning;
@@ -33,20 +37,20 @@ public class Vocabulary extends BaseEntity {
         this.original = original;
     }
 
-    public String getFurigana() {
+    public List<String> getFurigana() {
         return furigana;
     }
 
-    public void setFurigana(String furigana) {
-        this.furigana = furigana;
+    public void addFurigana(String furigana) {
+        this.furigana.add(furigana);
     }
 
-    public String getMeaning() {
+    public List<String> getMeaning() {
         return meaning;
     }
 
-    public void setMeaning(String meaning) {
-        this.meaning = meaning;
+    public void addMeaning(String meaning) {
+        this.meaning.add(meaning);
     }
 
     public Integer getJlpt() {
