@@ -5,6 +5,7 @@ import com.ms.learnkanji.services.KanjiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -24,5 +25,10 @@ public class KanjiController {
                              @Argument Integer jlpt, @Argument("meaning") List<String> meaning,
                              @Argument("readings_on") List<String> readingsOn, @Argument("readings_kun") List<String> readingsKun) {
         return kanjiService.createKanji(value, stroke, grade, frequency, jlpt, meaning, readingsOn, readingsKun);
+    }
+
+    @QueryMapping
+    public Kanji findKanjiByValue(@Argument String value) {
+        return kanjiService.getKanjiByValue(value);
     }
 }

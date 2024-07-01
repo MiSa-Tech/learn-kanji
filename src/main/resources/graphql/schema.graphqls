@@ -1,6 +1,7 @@
 type Query {
     findUserByUsername(username: String!): User
     findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
+    findKanjiByValue(value: String!): Kanji
 }
 
 type User {

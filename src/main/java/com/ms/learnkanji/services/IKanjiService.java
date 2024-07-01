@@ -9,4 +9,5 @@ public interface IKanjiService {
                       Integer grade, Integer frequency,
                       Integer jlpt, List<String> meaning,
                       List<String> readingsOn, List<String> readingsKun);
+    Kanji getKanjiByValue(String value);
 }

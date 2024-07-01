@@ -50,4 +50,12 @@ public class KanjiService implements IKanjiService {
         }
         return kanjiRepository.save(toSave);
     }
+
+    @Override
+    public Kanji getKanjiByValue(String value) {
+        if (value == null || value.isEmpty()) {
+            throw new InvalidInputException("Value cannot be null or empty");
+        }
+        return kanjiRepository.findByValue(value).orElse(null);
+    }
 }

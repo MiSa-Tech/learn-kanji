@@ -6,6 +6,7 @@ import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.User;
+import com.ms.learnkanji.repositories.ICustomUserRepository;
 import com.ms.learnkanji.repositories.KanjiRepository;
 import com.ms.learnkanji.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,8 @@ public class UserService implements IUserService {
             throw new InvalidInputException("Username cannot be empty");
         }
 
-        User user = userRepository.findByUsername(username)
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException(MessageError.USER_NOT_FOUND));
-        return user;
     }
 
     @Override
