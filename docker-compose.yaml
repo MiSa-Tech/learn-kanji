@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:
+  backend:
+    container_name: backend
+    image: nmngo248/kanji-back:0.0.1-SNAPSHOT
+    hostname: backend
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - neo
+
   neo:
     image: neo4j:latest
     container_name: neo

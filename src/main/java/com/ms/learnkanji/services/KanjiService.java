@@ -3,6 +3,7 @@ package com.ms.learnkanji.services;
 import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.InvalidInputException;
+import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.repositories.KanjiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,7 @@ public class KanjiService implements IKanjiService {
         if (value == null || value.isEmpty()) {
             throw new InvalidInputException("Value cannot be null or empty");
         }
-        return kanjiRepository.findByValue(value).orElse(null);
+        return kanjiRepository.findByValue(value)
+                .orElseThrow(() -> new NotFoundException(MessageError.KANJI_NOT_FOUND));
     }
 }
