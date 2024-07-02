@@ -7,6 +7,7 @@ type Query {
 type User {
     id: ID!
     username: String!
+    role: String!
     jlpt: Int
     LEARNT_KANJI: [Kanji]
     LEARNT_VOCABULARY: [Vocabulary]
@@ -34,7 +35,7 @@ type Vocabulary {
 }
 
 type Mutation {
-    createUser(username: String!, jlpt: Int): User!
+    createUser(username: String!, password: String!, jlpt: Int): User!
     createKanji(value: String!, stroke: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
     userLearntKanji(username: String!, kanji: String!): User!
 }

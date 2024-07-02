@@ -9,6 +9,7 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class UserController {
     }
 
     @QueryMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> findAllUsers(@Argument Integer pageNum,
                                    @Argument Integer pageSize) {
         return userService.getAllUsers(pageNum, pageSize);
@@ -36,14 +38,20 @@ public class UserController {
 
     @MutationMapping
     public User createUser(@Argument("username") String username,
+                           @Argument("password") String password,
                            @Argument("jlpt") Integer jlpt) {
-        return userService.createUser(username, jlpt);
+        return userService.createUser(username, password, jlpt);
     }
 
     @MutationMapping
     public User userLearntKanji(@Argument("username") String username,
                                 @Argument("kanji") String kanjiValue) {
         return userService.userLearntKanji(username, kanjiValue);
+    }
+
+    @SchemaMapping(typeName = "User", field = "role")
+    public String role(User user) {
+        return user.getRole().getName();
     }
 
     @SchemaMapping(typeName = "User", field = "LEARNT_KANJI")

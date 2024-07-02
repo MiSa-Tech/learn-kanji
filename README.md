@@ -16,6 +16,11 @@ To run this project locally, you will need the following installed on your machi
 - The Neo4j Browser will be available at `http://localhost:7474`
 
 3. To stop the containers, run `docker compose down` in the root directory of the project
+4. Clean up resources:
+- docker volume prune
+- docker network prune
+- docker system prune
+- docker builder prune
 
 ## API Documentation
 Here is the image of an API call example:

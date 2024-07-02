@@ -11,6 +11,10 @@ import java.util.List;
 public class User extends BaseEntity {
     @Property("username")
     private String username;
+    @Property("password")
+    private String password;
+    @Property("role")
+    private Role role;
     @Property("jlpt")
     private Integer jlpt;
     @Relationship(type = "LEARNT_KANJI", direction = Relationship.Direction.OUTGOING)
@@ -21,8 +25,9 @@ public class User extends BaseEntity {
     public User() {
     }
 
-    public User(String username, Integer jlpt) {
+    public User(String username, Role role, Integer jlpt) {
         this.username = username;
+        this.role = role;
         this.jlpt = jlpt;
     }
 
@@ -32,6 +37,22 @@ public class User extends BaseEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role roles) {
+        this.role = role;
     }
 
     public Integer getJlpt() {

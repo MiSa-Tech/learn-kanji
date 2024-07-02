@@ -5,13 +5,14 @@ import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Kanji;
+import com.ms.learnkanji.models.Role;
 import com.ms.learnkanji.models.User;
-import com.ms.learnkanji.repositories.ICustomUserRepository;
 import com.ms.learnkanji.repositories.KanjiRepository;
 import com.ms.learnkanji.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,12 +21,15 @@ import java.util.List;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final KanjiRepository kanjiRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository,
-                       KanjiRepository kanjiRepository) {
+                       KanjiRepository kanjiRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.kanjiRepository = kanjiRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,12 +52,18 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User createUser(String username, Integer jlpt) {
+    public User createUser(String username, String password, Integer jlpt) {
         if (username == null) {
             throw new InvalidInputException("Username cannot be null");
         }
         if (username.isEmpty()) {
             throw new InvalidInputException("Username cannot be empty");
+        }
+        if (password == null) {
+            throw new InvalidInputException("Password cannot be null");
+        }
+        if (password.isEmpty()) {
+            throw new InvalidInputException("Password cannot be empty");
         }
 
         User user = userRepository.findByUsername(username).orElse(null);
@@ -61,7 +71,8 @@ public class UserService implements IUserService {
             throw new AlreadyPresentException(MessageError.USER_ALREADY_PRESENT);
         }
 
-        User toSave = new User(username, jlpt);
+        User toSave = new User(username, Role.USER, jlpt);
+        toSave.setPassword(passwordEncoder.encode(password));
         return userRepository.save(toSave);
     }
 
