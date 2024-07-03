@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("!unsecured")
+@Profile("secured")
 public class AuthService implements IAuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
-@Profile("!unsecured")
+@Profile("secured")
 public class AuthController {
     private final AuthService authService;
 
