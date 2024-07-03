@@ -7,6 +7,7 @@ import com.ms.learnkanji.output.auth.AuthenticationResponse;
 import com.ms.learnkanji.repositories.UserRepository;
 import com.ms.learnkanji.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile("!unsecured")
 public class AuthService implements IAuthService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;

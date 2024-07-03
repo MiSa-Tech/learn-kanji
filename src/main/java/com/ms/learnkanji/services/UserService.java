@@ -84,7 +84,7 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new NotFoundException(MessageError.KANJI_NOT_FOUND));
 
         List<Kanji> kanjis = user.getKanjis();
-        if (kanjis.contains(kanji)) {
+        if (kanjis.stream().anyMatch(k -> k.getValue().equals(kanjiValue))) {
             throw new AlreadyPresentException(MessageError.KANJI_ALREADY_LEARNT);
         }
         user.addKanji(kanji);

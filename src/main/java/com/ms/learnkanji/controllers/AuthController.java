@@ -4,6 +4,7 @@ import com.ms.learnkanji.input.auth.AuthenticationRequest;
 import com.ms.learnkanji.output.auth.AuthenticationResponse;
 import com.ms.learnkanji.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Profile("!unsecured")
 public class AuthController {
     private final AuthService authService;
 
