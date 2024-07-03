@@ -2,10 +2,10 @@ spring:
   application:
     name: learn-kanji
   neo4j:
-    uri: bolt://neo:7687
+    uri: ${NEO4J_URI}
     authentication:
-      username: neo4j
-      password: password
+      username: ${NEO4J_USERNAME}
+      password: ${NEO4J_PASSWORD}
     pool:
       metrics-enabled: true
   graphql:
