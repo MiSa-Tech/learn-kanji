@@ -54,5 +54,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
             docker stop backend || true
             docker rm backend || true
-            docker run -d --name backend -p 8080:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
+            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
           EOF
