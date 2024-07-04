@@ -26,14 +26,14 @@ public class KanjiService implements IKanjiService {
                              Integer jlpt, List<String> meaning,
                              List<String> readingsOn, List<String> readingsKun) {
         if (value == null || value.isEmpty()) {
-            throw new InvalidInputException("Value cannot be null or empty");
+            throw new InvalidInputException(MessageError.Kanji.VALUE_CANNOT_BE_NULL);
         }
         if (meaning == null || meaning.isEmpty()) {
-            throw new InvalidInputException("Meaning cannot be null or empty");
+            throw new InvalidInputException(MessageError.Kanji.MEANING_CANNOT_BE_NULL);
         }
         Kanji kanji = kanjiRepository.findByValue(value).orElse(null);
         if (kanji != null) {
-            throw new AlreadyPresentException(MessageError.KANJI_ALREADY_PRESENT);
+            throw new AlreadyPresentException(MessageError.Kanji.KANJI_ALREADY_PRESENT);
         }
         Kanji toSave = new Kanji();
         toSave.setValue(value);
@@ -55,9 +55,9 @@ public class KanjiService implements IKanjiService {
     @Override
     public Kanji getKanjiByValue(String value) {
         if (value == null || value.isEmpty()) {
-            throw new InvalidInputException("Value cannot be null or empty");
+            throw new InvalidInputException(MessageError.Kanji.VALUE_CANNOT_BE_NULL);
         }
         return kanjiRepository.findByValue(value)
-                .orElseThrow(() -> new NotFoundException(MessageError.KANJI_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MessageError.Kanji.KANJI_NOT_FOUND));
     }
 }

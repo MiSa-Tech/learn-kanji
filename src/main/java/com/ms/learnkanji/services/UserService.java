@@ -35,14 +35,14 @@ public class UserService implements IUserService {
     @Override
     public User getUserByUsername(String username) {
         if (username == null) {
-            throw new InvalidInputException("Username cannot be null");
+            throw new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_NULL);
         }
         if (username.isEmpty()) {
-            throw new InvalidInputException("Username cannot be empty");
+            throw new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_EMPTY);
         }
 
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException(MessageError.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MessageError.User.USER_NOT_FOUND));
     }
 
     @Override
@@ -54,21 +54,21 @@ public class UserService implements IUserService {
     @Override
     public User createUser(String username, String password, Integer jlpt) {
         if (username == null) {
-            throw new InvalidInputException("Username cannot be null");
+            throw new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_NULL);
         }
         if (username.isEmpty()) {
-            throw new InvalidInputException("Username cannot be empty");
+            throw new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_EMPTY);
         }
         if (password == null) {
-            throw new InvalidInputException("Password cannot be null");
+            throw new InvalidInputException(MessageError.User.PASSWORD_CANNOT_BE_NULL);
         }
         if (password.isEmpty()) {
-            throw new InvalidInputException("Password cannot be empty");
+            throw new InvalidInputException(MessageError.User.PASSWORD_CANNOT_BE_EMPTY);
         }
 
         User user = userRepository.findByUsername(username).orElse(null);
         if (user != null) {
-            throw new AlreadyPresentException(MessageError.USER_ALREADY_PRESENT);
+            throw new AlreadyPresentException(MessageError.User.USER_ALREADY_PRESENT);
         }
 
         User toSave = new User(username, Role.USER, jlpt);
@@ -79,13 +79,13 @@ public class UserService implements IUserService {
     @Override
     public User userLearntKanji(String username, String kanjiValue) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException(MessageError.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MessageError.User.USER_NOT_FOUND));
         Kanji kanji = kanjiRepository.findByValue(kanjiValue)
-                .orElseThrow(() -> new NotFoundException(MessageError.KANJI_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(MessageError.Kanji.KANJI_NOT_FOUND));
 
         List<Kanji> kanjis = user.getKanjis();
         if (kanjis.stream().anyMatch(k -> k.getValue().equals(kanjiValue))) {
-            throw new AlreadyPresentException(MessageError.KANJI_ALREADY_LEARNT);
+            throw new AlreadyPresentException(MessageError.Kanji.KANJI_ALREADY_LEARNT);
         }
         user.addKanji(kanji);
         // update user with new kanji

@@ -1,5 +1,6 @@
 package com.ms.learnkanji.services;
 
+import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.models.User;
 import com.ms.learnkanji.models.CustomUserDetails;
 import com.ms.learnkanji.repositories.UserRepository;
@@ -27,6 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst()
                 .map(CustomUserDetails::new)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(MessageError.Auth.USERNAME_NOT_FOUND));
     }
 }

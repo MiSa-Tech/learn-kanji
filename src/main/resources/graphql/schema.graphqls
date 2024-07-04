@@ -4,6 +4,13 @@ type Query {
     findKanjiByValue(value: String!): Kanji
 }
 
+type Mutation {
+    createUser(username: String!, password: String!, jlpt: Int): User!
+    createKanji(value: String!, stroke: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
+    userLearntKanji(username: String!, kanji: String!): User!
+    login(username: String!, password: String!): AuthenticationResponse!
+}
+
 type User {
     id: ID!
     username: String!
@@ -34,8 +41,9 @@ type Vocabulary {
     jlpt: Int
 }
 
-type Mutation {
-    createUser(username: String!, password: String!, jlpt: Int): User!
-    createKanji(value: String!, stroke: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
-    userLearntKanji(username: String!, kanji: String!): User!
+type AuthenticationResponse {
+    jwt: String!
+    id: String!
+    username: String!
+    role: String!
 }

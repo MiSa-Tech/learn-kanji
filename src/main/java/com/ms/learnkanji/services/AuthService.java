@@ -1,5 +1,6 @@
 package com.ms.learnkanji.services;
 
+import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.exceptions.BadRequestException;
 import com.ms.learnkanji.models.Role;
 import com.ms.learnkanji.models.User;
@@ -40,7 +41,7 @@ public class AuthService implements IAuthService {
                     username, password
             ));
         } catch (BadCredentialsException e) {
-            throw new BadRequestException("Incorrect username or password");
+            throw new BadRequestException(MessageError.Auth.USERNAME_OR_PASSWORD_INVALID);
         }
         final UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
         final String jwt = jwtUtil.generateToken(userDetails);
