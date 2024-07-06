@@ -60,4 +60,11 @@ public class KanjiService implements IKanjiService {
         return kanjiRepository.findByValue(value)
                 .orElseThrow(() -> new NotFoundException(MessageError.Kanji.KANJI_NOT_FOUND));
     }
+
+    public List<Kanji> getKanjiByJlpt(int jlpt) {
+        if(jlpt < 1 || jlpt > 5) {
+            throw new InvalidInputException(MessageError.Kanji.JLPT_LEVEL_INVALID);
+        }
+        return kanjiRepository.findByJlpt(jlpt);
+    }
 }
