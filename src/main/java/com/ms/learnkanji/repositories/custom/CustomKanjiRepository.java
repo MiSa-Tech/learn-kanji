@@ -8,6 +8,7 @@ import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,5 +37,16 @@ public class CustomKanjiRepository implements ICustomKanjiRepository {
             kanji.addPartOf(vocabulary);
         }
         return Optional.of(kanji);
+    }
+
+    @Override
+    public List<Kanji> findByJlpt(int jlpt) {
+        Session session = sessionFactory.openSession();
+        Iterable<Kanji> listKanjis = session.query(Kanji.class,
+                """
+                MATCH (k:Kanji {jlpt: $jlpt}) RETURN k LIMIT 25
+                """,
+                Map.of("jlpt", jlpt));
+        return (List<Kanji>) listKanjis;
     }
 }

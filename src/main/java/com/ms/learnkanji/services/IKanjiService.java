@@ -10,4 +10,7 @@ public interface IKanjiService {
                       Integer jlpt, List<String> meaning,
                       List<String> readingsOn, List<String> readingsKun);
     Kanji getKanjiByValue(String value);
+
+    List<Kanji> getKanjiByJlpt(int jlpt);
+
 }

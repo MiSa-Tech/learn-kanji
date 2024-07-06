@@ -31,4 +31,7 @@ public class KanjiController {
     public Kanji findKanjiByValue(@Argument String value) {
         return kanjiService.getKanjiByValue(value);
     }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByJLPT(@Argument int jlpt) { return kanjiService.getKanjiByJlpt(jlpt); }
 }

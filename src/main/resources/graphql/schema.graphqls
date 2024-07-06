@@ -2,6 +2,7 @@ type Query {
     findUserByUsername(username: String!): User
     findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
     findKanjiByValue(value: String!): Kanji
+    findKanjiByJlpt(value: Int!): [Kanji]!
 }
 
 type Mutation {

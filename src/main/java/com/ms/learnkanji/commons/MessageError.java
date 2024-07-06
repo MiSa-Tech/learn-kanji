@@ -7,6 +7,7 @@ public class MessageError {
         public static final String KANJI_ALREADY_PRESENT = "Kanji already present";
         public static final String KANJI_NOT_FOUND = "Kanji not found";
         public static final String KANJI_ALREADY_LEARNT = "Kanji already learnt";
+        public static final String JLPT_LEVEL_INVALID = "JLPT level doesn't exist";
     }
 
     public class User {
