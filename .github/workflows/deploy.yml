@@ -20,6 +20,9 @@ jobs:
           distribution: 'temurin'
           architecture: x64
 
+      - name: Get project version
+        run: echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
@@ -30,10 +33,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} .
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
 
   deploy:
     needs: build
@@ -51,8 +54,9 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
             docker stop backend || true
             docker rm backend || true
-            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:0.0.1-SNAPSHOT
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} || true
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
+            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
           EOF
