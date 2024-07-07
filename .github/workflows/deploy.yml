@@ -23,6 +23,9 @@ jobs:
       - name: Get project version
         run: echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
+      - name: Display version
+        run: echo "Project version is ${{ env.BACKEND_VERSION }}"
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
@@ -33,7 +36,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} .
+        run: docker build -t --build-arg="BACKEND_VERSION={{ env.BACKEND_VERSION }}" ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} .
 
       - name: Push Docker image to Docker Hub
         run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}

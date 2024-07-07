@@ -2,7 +2,8 @@ FROM openjdk:17-jdk-slim-buster
 
 WORKDIR /app
 
-COPY target/learn-kanji-0.0.1-SNAPSHOT.jar /app
+ARG BACKEND_VERSION
+COPY target/learn-kanji-${BACKEND_VERSION}.jar /app/learn-kanji.jar
 
 ENTRYPOINT ["java"]
-CMD ["-jar","learn-kanji-0.0.1-SNAPSHOT.jar","--spring.profiles.active=dev,secured"]
+CMD ["-jar","learn-kanji.jar","--spring.profiles.active=dev,secured"]
