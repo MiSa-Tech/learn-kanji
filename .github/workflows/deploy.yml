@@ -36,10 +36,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t --build-arg="BACKEND_VERSION={{ env.BACKEND_VERSION }}" ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} .
+        run: docker build --tag=${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }} --build-arg="BACKEND_VERSION=${{ env.BACKEND_VERSION }}" $(pwd)
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
 
   deploy:
     needs: build
@@ -59,7 +59,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             docker stop backend || true
             docker rm backend || true
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }} || true
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
-            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:{{ env.BACKEND_VERSION }}
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }} || true
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
+            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
           EOF
