@@ -1,6 +1,6 @@
 package com.ms.learnkanji.configurations;
 
-import com.ms.learnkanji.services.CustomUserDetailsService;
+import com.ms.learnkanji.services.custom.CustomUserDetailsService;
 import com.ms.learnkanji.utils.JwtRequestFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

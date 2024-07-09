@@ -2,7 +2,7 @@ package com.ms.learnkanji.repositories.custom;
 
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.Vocabulary;
-import com.ms.learnkanji.repositories.ICustomKanjiRepository;
+import com.ms.learnkanji.repositories.CustomKanjiRepository;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class CustomKanjiRepository implements ICustomKanjiRepository {
+public class ImplCustomKanjiRepository implements CustomKanjiRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public CustomKanjiRepository(SessionFactory sessionFactory) {
+    public ImplCustomKanjiRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
