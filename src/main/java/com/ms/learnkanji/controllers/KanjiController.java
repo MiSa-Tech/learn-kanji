@@ -35,7 +35,11 @@ public class KanjiController {
     }
 
     @QueryMapping
-    public List<Kanji> findKanjiByJlpt(@Argument int jlpt) { return kanjiService.getKanjiByJlpt(jlpt); }
+    public List<Kanji> findKanjisByJlpt(@Argument Integer jlpt,
+                                        @Argument Integer pageNum,
+                                        @Argument Integer pageSize) {
+        return kanjiService.getKanjisByJlpt(jlpt, pageNum, pageSize);
+    }
 
     @SchemaMapping(typeName = "Kanji", field = "readings_on")
     public List<String> listReadingsOn(Kanji kanji) {

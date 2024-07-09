@@ -7,7 +7,7 @@ public class MessageError {
         public static final String KANJI_ALREADY_PRESENT = "Kanji already present";
         public static final String KANJI_NOT_FOUND = "Kanji not found";
         public static final String KANJI_ALREADY_LEARNT = "Kanji already learnt";
-        public static final String JLPT_LEVEL_INVALID = "JLPT level doesn't exist";
+        public static final String JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE = "JLPT level cannot be less than 1 or greater than 5";
     }
 
     public class User {
@@ -22,5 +22,10 @@ public class MessageError {
     public class Auth {
         public static final String USERNAME_OR_PASSWORD_INVALID = "Incorrect username or password";
         public static final String USERNAME_NOT_FOUND = "Username not found";
+    }
+
+    public class Pagination {
+        public static final String PAGE_NUM_CANNOT_BE_NEGATIVE = "Page number cannot be smaller than 0";
+        public static final String PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE = "Page size cannot be smaller than 1";
     }
 }

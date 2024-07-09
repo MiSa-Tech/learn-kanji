@@ -48,6 +48,12 @@ public class ImplUserService implements UserService {
 
     @Override
     public List<User> getAllUsers(Integer pageNum, Integer pageSize) {
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
         Sort sort = Sort.by(Sort.Order.asc("username"));
         return userRepository.findAll(PageRequest.of(pageNum, pageSize, sort)).toList();
     }

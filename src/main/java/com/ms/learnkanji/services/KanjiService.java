@@ -11,6 +11,5 @@ public interface KanjiService {
                       List<String> readingsOn, List<String> readingsKun);
     Kanji getKanjiByValue(String value);
 
-    List<Kanji> getKanjiByJlpt(int jlpt);
-
+    List<Kanji> getKanjisByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
 }

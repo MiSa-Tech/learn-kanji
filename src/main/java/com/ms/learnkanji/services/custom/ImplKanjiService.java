@@ -62,10 +62,17 @@ public class ImplKanjiService implements KanjiService {
                 .orElseThrow(() -> new NotFoundException(MessageError.Kanji.KANJI_NOT_FOUND));
     }
 
-    public List<Kanji> getKanjiByJlpt(int jlpt) {
+    @Override
+    public List<Kanji> getKanjisByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
         if(jlpt < 1 || jlpt > 5) {
-            throw new InvalidInputException(MessageError.Kanji.JLPT_LEVEL_INVALID);
+            throw new InvalidInputException(MessageError.Kanji.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE);
         }
-        return kanjiRepository.findByJlpt(jlpt);
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        return kanjiRepository.findByJlpt(jlpt, pageNum, pageSize);
     }
 }
