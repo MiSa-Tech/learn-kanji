@@ -1,4 +1,4 @@
-package com.ms.learnkanji.services;
+package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.models.User;

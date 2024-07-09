@@ -2,7 +2,7 @@ package com.ms.learnkanji.repositories.custom;
 
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.Vocabulary;
-import com.ms.learnkanji.repositories.ICustomKanjiRepository;
+import com.ms.learnkanji.repositories.CustomKanjiRepository;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class CustomKanjiRepository implements ICustomKanjiRepository {
+public class ImplCustomKanjiRepository implements CustomKanjiRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public CustomKanjiRepository(SessionFactory sessionFactory) {
+    public ImplCustomKanjiRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -40,13 +40,11 @@ public class CustomKanjiRepository implements ICustomKanjiRepository {
     }
 
     @Override
-    public List<Kanji> findByJlpt(int jlpt) {
+    public List<Kanji> findByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
         Session session = sessionFactory.openSession();
         Iterable<Kanji> listKanjis = session.query(Kanji.class,
-                """
-                MATCH (k:Kanji {jlpt: $jlpt}) RETURN k LIMIT 25
-                """,
-                Map.of("jlpt", jlpt));
+                "MATCH (k:Kanji {jlpt: $jlpt}) RETURN k SKIP $skip LIMIT $limit",
+                Map.of("jlpt", jlpt, "skip", pageNum * pageSize, "limit", pageSize));
         return (List<Kanji>) listKanjis;
     }
 }
