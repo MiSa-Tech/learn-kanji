@@ -1,6 +1,6 @@
 package com.ms.learnkanji.utils;
 
-import com.ms.learnkanji.services.CustomUserDetailsService;
+import com.ms.learnkanji.services.custom.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
