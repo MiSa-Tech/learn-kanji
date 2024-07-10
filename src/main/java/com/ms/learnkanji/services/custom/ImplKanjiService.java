@@ -22,7 +22,7 @@ public class ImplKanjiService implements KanjiService {
     }
 
     @Override
-    public Kanji createKanji(String value, Integer stroke,
+    public Kanji createKanji(String value, Integer strokes,
                              Integer grade, Integer frequency,
                              Integer jlpt, List<String> meaning,
                              List<String> readingsOn, List<String> readingsKun) {
@@ -38,7 +38,7 @@ public class ImplKanjiService implements KanjiService {
         }
         Kanji toSave = new Kanji();
         toSave.setValue(value);
-        toSave.setStroke(stroke);
+        toSave.setStrokes(strokes);
         toSave.setGrade(grade);
         toSave.setFrequency(frequency);
         toSave.setJlpt(jlpt);
