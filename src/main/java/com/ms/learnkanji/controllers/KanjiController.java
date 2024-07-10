@@ -22,11 +22,11 @@ public class KanjiController {
     }
 
     @MutationMapping
-    public Kanji createKanji(@Argument String value, @Argument Integer stroke,
+    public Kanji createKanji(@Argument String value, @Argument Integer strokes,
                              @Argument Integer grade, @Argument Integer frequency,
                              @Argument Integer jlpt, @Argument("meaning") List<String> meaning,
                              @Argument("readings_on") List<String> readingsOn, @Argument("readings_kun") List<String> readingsKun) {
-        return kanjiService.createKanji(value, stroke, grade, frequency, jlpt, meaning, readingsOn, readingsKun);
+        return kanjiService.createKanji(value, strokes, grade, frequency, jlpt, meaning, readingsOn, readingsKun);
     }
 
     @QueryMapping
@@ -35,10 +35,10 @@ public class KanjiController {
     }
 
     @QueryMapping
-    public List<Kanji> findKanjisByJlpt(@Argument Integer jlpt,
+    public List<Kanji> findKanjiByJlpt(@Argument Integer jlpt,
                                         @Argument Integer pageNum,
                                         @Argument Integer pageSize) {
-        return kanjiService.getKanjisByJlpt(jlpt, pageNum, pageSize);
+        return kanjiService.getKanjiByJlpt(jlpt, pageNum, pageSize);
     }
 
     @SchemaMapping(typeName = "Kanji", field = "readings_on")
@@ -55,4 +55,14 @@ public class KanjiController {
     public List<Vocabulary> listPartOf(Kanji kanji) {
         return kanji.getPartOf();
     }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes) {
+        return kanjiService.getKanjiByStrokes(strokes);
+    }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByGrade(@Argument int grade) { return kanjiService.getKanjiByGrade(grade); }
+
+
 }

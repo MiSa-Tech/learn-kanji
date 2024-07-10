@@ -5,11 +5,18 @@ import com.ms.learnkanji.models.Kanji;
 import java.util.List;
 
 public interface KanjiService {
+
+    Kanji createKanji(Kanji kanji);
     Kanji createKanji(String value, Integer stroke,
                       Integer grade, Integer frequency,
                       Integer jlpt, List<String> meaning,
                       List<String> readingsOn, List<String> readingsKun);
     Kanji getKanjiByValue(String value);
 
-    List<Kanji> getKanjisByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
+    List<Kanji> getKanjiByStrokes(int strokes);
+
+    List<Kanji> getKanjiByGrade(int grade);
+
+    List<Kanji> getKanjiByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
+
 }
