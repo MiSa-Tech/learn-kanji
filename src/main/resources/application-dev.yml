@@ -31,7 +31,7 @@ security:
 org:
   neo4j:
     migrations:
-      locations-to-scan: classpath:neo4j/migrations
+      locations-to-scan: classpath:db/migrations
 
 logging:
   level:

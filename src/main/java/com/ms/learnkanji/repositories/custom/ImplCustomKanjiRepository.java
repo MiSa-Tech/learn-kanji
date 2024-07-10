@@ -43,7 +43,7 @@ public class ImplCustomKanjiRepository implements CustomKanjiRepository {
     public List<Kanji> findByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
         Session session = sessionFactory.openSession();
         Iterable<Kanji> listKanjis = session.query(Kanji.class,
-                "MATCH (k:Kanji {jlpt: $jlpt}) RETURN k SKIP $skip LIMIT $limit",
+                "MATCH (k:Kanji {jlpt: $jlpt}) RETURN k SKIP $skip LIMIT $limit ORDER BY k.value ASC",
                 Map.of("jlpt", jlpt, "skip", pageNum * pageSize, "limit", pageSize));
         return (List<Kanji>) listKanjis;
     }
