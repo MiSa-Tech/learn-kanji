@@ -5,7 +5,7 @@ import com.ms.learnkanji.models.Kanji;
 import java.util.List;
 
 public interface KanjiService {
-    Kanji createKanji(String value, Integer stroke,
+    Kanji createKanji(String value, Integer strokes,
                       Integer grade, Integer frequency,
                       Integer jlpt, List<String> meaning,
                       List<String> readingsOn, List<String> readingsKun);

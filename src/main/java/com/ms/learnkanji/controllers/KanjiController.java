@@ -22,11 +22,11 @@ public class KanjiController {
     }
 
     @MutationMapping
-    public Kanji createKanji(@Argument String value, @Argument Integer stroke,
+    public Kanji createKanji(@Argument String value, @Argument Integer strokes,
                              @Argument Integer grade, @Argument Integer frequency,
                              @Argument Integer jlpt, @Argument("meaning") List<String> meaning,
                              @Argument("readings_on") List<String> readingsOn, @Argument("readings_kun") List<String> readingsKun) {
-        return kanjiService.createKanji(value, stroke, grade, frequency, jlpt, meaning, readingsOn, readingsKun);
+        return kanjiService.createKanji(value, strokes, grade, frequency, jlpt, meaning, readingsOn, readingsKun);
     }
 
     @QueryMapping

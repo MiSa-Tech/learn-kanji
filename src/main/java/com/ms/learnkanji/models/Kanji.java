@@ -11,8 +11,8 @@ import java.util.List;
 public class Kanji extends BaseEntity {
     @Property("value")
     private String value;
-    @Property("stroke")
-    private Integer stroke;
+    @Property("strokes")
+    private Integer strokes;
     @Property("grade")
     private Integer grade;
     @Property("frequency")
@@ -32,12 +32,12 @@ public class Kanji extends BaseEntity {
     }
 
     public Kanji(String value,
-                 Integer stroke, Integer grade,
+                 Integer strokes, Integer grade,
                  Integer frequency, Integer jlpt,
                  List<String> meaning, List<String> readingsOn,
                  List<String> readingsKun) {
         this.value = value;
-        this.stroke = stroke;
+        this.strokes = strokes;
         this.grade = grade;
         this.frequency = frequency;
         this.jlpt = jlpt;
@@ -54,12 +54,12 @@ public class Kanji extends BaseEntity {
         this.value = value;
     }
 
-    public Integer getStroke() {
-        return stroke;
+    public Integer getStrokes() {
+        return strokes;
     }
 
-    public void setStroke(Integer stroke) {
-        this.stroke = stroke;
+    public void setStrokes(Integer strokes) {
+        this.strokes = strokes;
     }
 
     public Integer getGrade() {

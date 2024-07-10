@@ -7,7 +7,7 @@ type Query {
 
 type Mutation {
     createUser(username: String!, password: String!, jlpt: Int): User!
-    createKanji(value: String!, stroke: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
+    createKanji(value: String!, strokes: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
     userLearntKanji(username: String!, kanji: String!): User!
     login(username: String!, password: String!): AuthenticationResponse!
 }
@@ -24,7 +24,7 @@ type User {
 type Kanji {
     id: ID!
     value: String!
-    stroke: Int
+    strokes: Int
     grade: Int
     frequency: Int
     jlpt: Int
