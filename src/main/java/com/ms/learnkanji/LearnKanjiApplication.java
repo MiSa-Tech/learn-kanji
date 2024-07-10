@@ -25,4 +25,5 @@ public class LearnKanjiApplication {
     ConfigBuilderCustomizer configBuilderCustomizer() {
         return configBuilder -> configBuilder.withMetricsAdapter(MetricsAdapter.MICROMETER);
     }
+
 }
