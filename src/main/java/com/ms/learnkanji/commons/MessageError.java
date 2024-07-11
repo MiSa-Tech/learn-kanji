@@ -1,6 +1,13 @@
 package com.ms.learnkanji.commons;
 
 public class MessageError {
+    public class Vocabulary {
+        public static final String ORIGINAL_CANNOT_BE_NULL = "Original value cannot be null";
+        public static final String FURIGANA_CANNOT_BE_NULL = "Furigana cannot be null";
+        public static final String MEANING_CANNOT_BE_NULL = "Meaning cannot be null";
+        public static final String VOCABULARY_CANNOT_BE_FOUND = "Vocabulary cannot be found";
+    }
+
     public class Kanji {
         public static final String VALUE_CANNOT_BE_NULL = "Value cannot be null";
         public static final String MEANING_CANNOT_BE_NULL = "Meaning cannot be null";
@@ -8,6 +15,8 @@ public class MessageError {
         public static final String KANJI_NOT_FOUND = "Kanji not found";
         public static final String KANJI_ALREADY_LEARNT = "Kanji already learnt";
         public static final String JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE = "JLPT level cannot be less than 1 or greater than 5";
+        public static final String STROKES_NUMBER_NEGATIVE = "Strokes number invalid";
+        public static final String GRADE_INVALID = "Grade value invalid";
     }
 
     public class User {

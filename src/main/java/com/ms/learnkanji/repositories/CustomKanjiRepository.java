@@ -11,4 +11,8 @@ public interface CustomKanjiRepository {
     Optional<Kanji> findByValue(String value);
 
     List<Kanji> findByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
+
+    List<Kanji> findByStrokes(int strokes, Integer pageNum, Integer pageSize);
+
+    List<Kanji> findByGrade(int grade, Integer pageNum, Integer pageSize);
 }

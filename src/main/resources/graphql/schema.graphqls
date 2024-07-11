@@ -2,12 +2,16 @@ type Query {
     findUserByUsername(username: String!): User
     findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
     findKanjiByValue(value: String!): Kanji
-    findKanjisByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByStrokes(strokes: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findVocabularyByOriginal(original: String!): Vocabulary
 }
 
 type Mutation {
     createUser(username: String!, password: String!, jlpt: Int): User!
     createKanji(value: String!, strokes: Int, grade: Int, frequency: Int, jlpt: Int, meaning: [String]!, readings_on: [String], readings_kun: [String]): Kanji!
+    createVocabulary(original: String!, furigana: [String]!, meaning: [String]!, jlpt: Int): Vocabulary!
     userLearntKanji(username: String!, kanji: String!): User!
     login(username: String!, password: String!): AuthenticationResponse!
 }

@@ -63,8 +63,8 @@ public class ImplKanjiService implements KanjiService {
     }
 
     @Override
-    public List<Kanji> getKanjisByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
-        if(jlpt < 1 || jlpt > 5) {
+    public List<Kanji> getKanjiByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
+        if (jlpt < 1 || jlpt > 5) {
             throw new InvalidInputException(MessageError.Kanji.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE);
         }
         if (pageNum < 0) {
@@ -74,5 +74,33 @@ public class ImplKanjiService implements KanjiService {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
         return kanjiRepository.findByJlpt(jlpt, pageNum, pageSize);
+    }
+
+    @Override
+    public List<Kanji> getKanjiByStrokes(Integer strokes, Integer pageNum, Integer pageSize) {
+        if (strokes <= 0) {
+            throw new InvalidInputException(MessageError.Kanji.STROKES_NUMBER_NEGATIVE);
+        }
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        return kanjiRepository.findByStrokes(strokes, pageNum, pageSize);
+    }
+
+    @Override
+    public List<Kanji> getKanjiByGrade(Integer grade, Integer pageNum, Integer pageSize) {
+        if (grade < 1 | grade > 12) {
+            throw new InvalidInputException(MessageError.Kanji.GRADE_INVALID);
+        }
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        return kanjiRepository.findByGrade(grade, pageNum, pageSize);
     }
 }

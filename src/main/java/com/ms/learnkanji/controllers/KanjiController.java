@@ -35,10 +35,10 @@ public class KanjiController {
     }
 
     @QueryMapping
-    public List<Kanji> findKanjisByJlpt(@Argument Integer jlpt,
+    public List<Kanji> findKanjiByJlpt(@Argument Integer jlpt,
                                         @Argument Integer pageNum,
                                         @Argument Integer pageSize) {
-        return kanjiService.getKanjisByJlpt(jlpt, pageNum, pageSize);
+        return kanjiService.getKanjiByJlpt(jlpt, pageNum, pageSize);
     }
 
     @SchemaMapping(typeName = "Kanji", field = "readings_on")
@@ -54,5 +54,19 @@ public class KanjiController {
     @SchemaMapping(typeName = "Kanji", field = "PART_OF")
     public List<Vocabulary> listPartOf(Kanji kanji) {
         return kanji.getPartOf();
+    }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes,
+                                          @Argument Integer pageNum,
+                                          @Argument Integer pageSize) {
+        return kanjiService.getKanjiByStrokes(strokes, pageNum, pageSize);
+    }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByGrade(@Argument int grade,
+                                        @Argument Integer pageNum,
+                                        @Argument Integer pageSize) {
+        return kanjiService.getKanjiByGrade(grade, pageNum, pageSize);
     }
 }

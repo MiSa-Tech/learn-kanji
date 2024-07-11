@@ -47,4 +47,22 @@ public class ImplCustomKanjiRepository implements CustomKanjiRepository {
                 Map.of("jlpt", jlpt, "skip", pageNum * pageSize, "limit", pageSize));
         return (List<Kanji>) listKanjis;
     }
+
+    @Override
+    public List<Kanji> findByStrokes(int strokes, Integer pageNum, Integer pageSize) {
+        Session session = sessionFactory.openSession();
+        Iterable<Kanji> listKanjis = session.query(Kanji.class,
+                "MATCH (k:Kanji {strokes: $strokes}) RETURN k SKIP $skip LIMIT $limit ORDER BY k.value ASC",
+                Map.of("strokes", strokes, "skip", pageNum * pageSize, "limit", pageSize));
+        return (List<Kanji>) listKanjis;
+    }
+
+    @Override
+    public List<Kanji> findByGrade(int grade, Integer pageNum, Integer pageSize) {
+        Session session = sessionFactory.openSession();
+        Iterable<Kanji> listKanjis = session.query(Kanji.class,
+                "MATCH (k:Kanji {grade: $grade}) RETURN k SKIP $skip LIMIT $limit ORDER BY k.value ASC",
+                Map.of("grade", grade, "skip", pageNum * pageSize, "limit", pageSize));
+        return (List<Kanji>) listKanjis;
+    }
 }
