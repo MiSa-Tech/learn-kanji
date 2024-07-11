@@ -57,12 +57,16 @@ public class KanjiController {
     }
 
     @QueryMapping
-    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes) {
-        return kanjiService.getKanjiByStrokes(strokes);
+    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes,
+                                          @Argument Integer pageNum,
+                                          @Argument Integer pageSize) {
+        return kanjiService.getKanjiByStrokes(strokes, pageNum, pageSize);
     }
 
     @QueryMapping
-    public List<Kanji> findKanjiByGrade(@Argument int grade) { return kanjiService.getKanjiByGrade(grade); }
-
-
+    public List<Kanji> findKanjiByGrade(@Argument int grade,
+                                        @Argument Integer pageNum,
+                                        @Argument Integer pageSize) {
+        return kanjiService.getKanjiByGrade(grade, pageNum, pageSize);
+    }
 }

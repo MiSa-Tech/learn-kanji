@@ -24,9 +24,7 @@ public class ImplCustomVocabularyRepository implements CustomVocabularyRepositor
     public Optional<Vocabulary> findByOriginal(String original) {
         Session session = sessionFactory.openSession();
         Iterable<Vocabulary> listVocabs = session.query(Vocabulary.class,
-                """
-                   MATCH (v:Vocabulary {original: $original}) RETURN v
-                   """,
+                "MATCH (v:Vocabulary {original: $original}) RETURN v",
                 Map.of("original", original));
         if (!listVocabs.iterator().hasNext()) {
             return Optional.empty();
