@@ -3,8 +3,8 @@ type Query {
     findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
     findKanjiByValue(value: String!): Kanji
     findKanjiByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
-    findKanjiByStrokes(strokes: Int!): [Kanji]!
-    findKanjiByGrade(grade: Int!): [Kanji]!
+    findKanjiByStrokes(strokes: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findVocabularyByOriginal(original: String!): Vocabulary
 }
 

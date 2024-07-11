@@ -77,18 +77,30 @@ public class ImplKanjiService implements KanjiService {
     }
 
     @Override
-    public List<Kanji> getKanjiByStrokes(int strokes) {
+    public List<Kanji> getKanjiByStrokes(Integer strokes, Integer pageNum, Integer pageSize) {
         if (strokes <= 0) {
             throw new InvalidInputException(MessageError.Kanji.STROKES_NUMBER_NEGATIVE);
         }
-        return kanjiRepository.findByStrokes(strokes);
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        return kanjiRepository.findByStrokes(strokes, pageNum, pageSize);
     }
 
     @Override
-    public List<Kanji> getKanjiByGrade(int grade) {
+    public List<Kanji> getKanjiByGrade(Integer grade, Integer pageNum, Integer pageSize) {
         if (grade < 1 | grade > 12) {
             throw new InvalidInputException(MessageError.Kanji.GRADE_INVALID);
         }
-        return kanjiRepository.findByGrade(grade);
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        return kanjiRepository.findByGrade(grade, pageNum, pageSize);
     }
 }

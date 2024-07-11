@@ -12,7 +12,7 @@ public interface CustomKanjiRepository {
 
     List<Kanji> findByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
 
-    List<Kanji> findByStrokes(int strokes);
+    List<Kanji> findByStrokes(int strokes, Integer pageNum, Integer pageSize);
 
-    List<Kanji> findByGrade(int grade);
+    List<Kanji> findByGrade(int grade, Integer pageNum, Integer pageSize);
 }
