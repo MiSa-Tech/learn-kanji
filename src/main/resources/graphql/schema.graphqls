@@ -6,6 +6,7 @@ type Query {
     findKanjiByStrokes(strokes: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findVocabularyByOriginal(original: String!): Vocabulary
+    findBestShouldLearnKanji(username: String!, pageNum: Int!, pageSize: Int!): [KanjiResult]!
 }
 
 type Mutation {
@@ -23,6 +24,11 @@ type User {
     jlpt: Int
     LEARNT_KANJI: [Kanji]
     LEARNT_VOCABULARY: [Vocabulary]
+}
+
+type KanjiResult {
+    kanji: Kanji!,
+    occurrence: Int!
 }
 
 type Kanji {
