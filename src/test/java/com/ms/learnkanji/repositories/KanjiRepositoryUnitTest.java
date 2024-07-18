@@ -11,6 +11,7 @@ import org.neo4j.harness.Neo4j;
 import org.neo4j.harness.Neo4jBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.neo4j.DataNeo4jTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataNeo4jTest
+@ActiveProfiles("test")
 class KanjiRepositoryUnitTest {
     @Autowired
     private KanjiRepository kanjiRepository;

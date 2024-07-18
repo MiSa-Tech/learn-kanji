@@ -6,6 +6,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Node("Kanji")
 public class Kanji extends BaseEntity {
@@ -120,5 +121,18 @@ public class Kanji extends BaseEntity {
 
     public void addReadingsKun(String readingsKun) {
         this.readingsKun.add(readingsKun);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Kanji kanji = (Kanji) o;
+        return Objects.equals(value, kanji.value) && Objects.equals(strokes, kanji.strokes) && Objects.equals(grade, kanji.grade) && Objects.equals(frequency, kanji.frequency) && Objects.equals(jlpt, kanji.jlpt) && Objects.equals(meaning, kanji.meaning) && Objects.equals(readingsOn, kanji.readingsOn) && Objects.equals(readingsKun, kanji.readingsKun) && Objects.equals(partOf, kanji.partOf);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value, strokes, grade, frequency, jlpt, meaning, readingsOn, readingsKun, partOf);
     }
 }
