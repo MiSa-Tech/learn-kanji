@@ -1,9 +1,7 @@
 package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
-import com.ms.learnkanji.commons.Tuple;
 import com.ms.learnkanji.exceptions.InvalidInputException;
-import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.results.KanjiResult;
 import com.ms.learnkanji.repositories.KanjiResultRepository;
 import com.ms.learnkanji.services.KanjiResultService;
@@ -13,11 +11,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class CustomKanjiResultService implements KanjiResultService {
+public class ImplKanjiResultService implements KanjiResultService {
     private final KanjiResultRepository kanjiResultRepository;
 
     @Autowired
-    public CustomKanjiResultService(KanjiResultRepository kanjiResultRepository) {
+    public ImplKanjiResultService(KanjiResultRepository kanjiResultRepository) {
         this.kanjiResultRepository = kanjiResultRepository;
     }
 
