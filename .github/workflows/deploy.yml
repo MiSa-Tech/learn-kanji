@@ -20,11 +20,14 @@ jobs:
           distribution: 'temurin'
           architecture: x64
 
-      - name: Get project version
-        run: echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+      - name: Get release version
+        run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_ENV
 
-      - name: Display version
-        run: echo "Project version is ${{ env.BACKEND_VERSION }}"
+      - name: Display release version
+        run: echo "Project version is ${{ env.RELEASE_VERSION }}"
+
+      - name: Get backend version
+        run: echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
@@ -36,10 +39,10 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build --tag=${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }} --build-arg="BACKEND_VERSION=${{ env.BACKEND_VERSION }}" $(pwd)
+        run: docker build --tag=${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }} --build-arg="BACKEND_VERSION=${{ env.BACKEND_VERSION }}" $(pwd)
 
       - name: Push Docker image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
 
   deploy:
     needs: build
@@ -59,7 +62,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             docker stop backend || true
             docker rm backend || true
-            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }} || true
-            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
-            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.BACKEND_VERSION }}
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }} || true
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
+            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
           EOF
