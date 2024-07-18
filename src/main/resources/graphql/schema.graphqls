@@ -6,7 +6,7 @@ type Query {
     findKanjiByStrokes(strokes: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findVocabularyByOriginal(original: String!): Vocabulary
-    findBestShouldLearnKanji(username: String!): [KanjiResult]!
+    findBestShouldLearnKanji(username: String!, pageNum: Int!, pageSize: Int!): [KanjiResult]!
 }
 
 type Mutation {

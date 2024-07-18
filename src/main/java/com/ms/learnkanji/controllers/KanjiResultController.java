@@ -1,8 +1,6 @@
 package com.ms.learnkanji.controllers;
 
-import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.results.KanjiResult;
-import com.ms.learnkanji.repositories.KanjiResultRepository;
 import com.ms.learnkanji.services.KanjiResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -22,7 +20,9 @@ public class KanjiResultController {
     }
 
     @QueryMapping
-    public List<KanjiResult> findBestShouldLearnKanji(@Argument String username) {
-        return kanjiResultService.getBestShouldLearnKanji(username);
+    public List<KanjiResult> findBestShouldLearnKanji(@Argument String username,
+                                                      @Argument Integer pageNum,
+                                                      @Argument Integer pageSize) {
+        return kanjiResultService.getBestShouldLearnKanji(username, pageNum, pageSize);
     }
 }
