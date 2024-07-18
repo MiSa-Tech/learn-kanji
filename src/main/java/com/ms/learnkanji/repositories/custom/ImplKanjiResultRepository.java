@@ -33,17 +33,13 @@ public class ImplKanjiResultRepository implements KanjiResultRepository {
                 WITH v, collect(k) AS kanjis, kanjiList
                 WITH v, kanjis, [kanji IN kanjis WHERE NOT kanji IN kanjiList] AS kanjisNotInList
                 WHERE size(kanjisNotInList) = 1
-                WITH kanjisNotInList[0] as kanji
-                WITH kanji, count(*) as occurrence
-                WITH {kanji: kanji, 
-                       occurrence: occurrence} AS kanjiResult
-                RETURN kanjiResult
-                ORDER BY kanjiResult.occurrence DESC
+                WITH kanjisNotInList[0] AS kanji
+                RETURN kanji, count(*) as occurrence
+                ORDER BY occurrence DESC
                 """;
 
-        Iterable<KanjiResult> listKanjiResults = session.query(KanjiResult.class, query,
-                Map.of("username", username));
-        return (List<KanjiResult>) listKanjiResults;
-
+        List<KanjiResult> listKanjiResults = session.queryDto(query,
+                Map.of("username", username), KanjiResult.class);
+        return listKanjiResults;
     }
 }
