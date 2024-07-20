@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 class KanjiServiceUnitTest {
@@ -38,6 +39,19 @@ class KanjiServiceUnitTest {
         kanjiRepository.deleteAll();
     }
 
+    @Test
+    void whenFindByValue_thenReturnKanji() {
+        // given
+        List<String> meaning = List.of("one");
+        Kanji kanji = new Kanji("一", null, null, null,
+                5, meaning, null, null);
+        // when
+        Mockito.when(kanjiRepository.findByValue("一")).thenReturn(Optional.of(kanji));
+
+        // then
+        Kanji found = kanjiService.getKanjiByValue("一");
+        Assertions.assertEquals(kanji, found);
+    }
 
     @Test
     void whenFindByEmptyValue_thenThrowException() {

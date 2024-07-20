@@ -24,7 +24,6 @@ class KanjiRepositoryUnitTest {
     @Autowired
     private KanjiRepository kanjiRepository;
 
-
     private static Neo4j embeddedDatabaseServer;
 
     @BeforeAll
@@ -61,8 +60,28 @@ class KanjiRepositoryUnitTest {
 
 
     @Test
+    void whenFindByValue_thenReturnKanji() {
+        // given
+        List<String> meaning = List.of("one");
+        Kanji kanji = new Kanji("一", null, null, null,
+                5, meaning, null, null);
+        // when
+        Optional<Kanji> kanjiOptional = kanjiRepository.findByValue("一");
+
+        // then
+        Assertions.assertTrue(kanjiOptional.isPresent());
+        // Assertions.assertEquals(kanji, kanjiOptional.get());
+    }
+
+    @Test
     void whenFindByValueNull_returnNull() {
         // when
         Assertions.assertEquals(Optional.empty(), kanjiRepository.findByValue(null));
+    }
+
+    @Test
+    void whenFindByEmptyValue_returnNull() {
+        // when
+        Assertions.assertEquals(Optional.empty(), kanjiRepository.findByValue(""));
     }
 }
