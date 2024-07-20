@@ -21,7 +21,6 @@ jobs:
 
     outputs:
       release_version: ${{ steps.get-version.outputs.release_version }}
-      backend_version: ${{ steps.get-version.outputs.backend_version }}
 
     steps:
       - name: Checkout repository
@@ -39,11 +38,9 @@ jobs:
           echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_ENV
           echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_ENV
 
-      - name: Set release and backend versions for outputs
+      - name: Set release version for output
         id: get-version
-        run: |
-          echo "release_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_OUTPUT
-          echo "backend_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_OUTPUT
+        run: echo "release_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_OUTPUT
 
       - name: Build with Maven
         run: mvn clean install
@@ -65,15 +62,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Display release and backend versions
-        run: |
-          echo "Release version is ${{ needs.build.outputs.release_version }}"
-          echo "Backend version is ${{ needs.build.outputs.backend_version }}"
+      - name: Display release version
+        run: echo "Release version is ${{ needs.build.outputs.release_version }}"
 
-      - name: Set release and backend versions as environment variables
-        run: |
-          echo "RELEASE_VERSION=${{ needs.build.outputs.release_version }}" >> $GITHUB_ENV
-          echo "BACKEND_VERSION=${{ needs.build.outputs.backend_version }}" >> $GITHUB_ENV
+      - name: Set release version as an environment variable
+        run: echo "RELEASE_VERSION=${{ needs.build.outputs.release_version }}" >> $GITHUB_ENV
 
       - name: Checkout repository
         uses: actions/checkout@v2
