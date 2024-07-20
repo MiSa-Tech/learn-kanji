@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: learn-kanji-test
+logging:
+  level:
+    org.springframework.data.neo4j.cypher.unrecognized: OFF
+    org.springframework.security: DEBUG
