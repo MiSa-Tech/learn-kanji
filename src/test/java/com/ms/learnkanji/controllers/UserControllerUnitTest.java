@@ -2,6 +2,7 @@ package com.ms.learnkanji.controllers;
 
 import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
+import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Role;
 import com.ms.learnkanji.models.User;
@@ -78,6 +79,8 @@ class UserControllerUnitTest {
     void whenFindByEmptyUsername_shouldThrowInvalidInputException() {
         // given
         String username = "";
+        // when
+        BDDMockito.given(userService.getUserByUsername(username)).willThrow(new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_EMPTY));
         // then
         // language=GraphQL
         String document = """
@@ -154,6 +157,8 @@ class UserControllerUnitTest {
     void whenCreateUser_shouldThrowInvalidInputException() {
         // given
         String username = "";
+        // when
+        BDDMockito.given(userService.createUser(username, "test", 5)).willThrow(new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_EMPTY));
         // then
         // language=GraphQL
         String document = """
@@ -210,7 +215,7 @@ class UserControllerUnitTest {
         // language=GraphQL
         String document = """
             mutation {
-                userLearnKanji(username: "test", kanji: "一") {
+                userLearntKanji(username: "test", kanji: "一") {
                     username
                     role
                 }
@@ -236,7 +241,7 @@ class UserControllerUnitTest {
         // language=GraphQL
         String document = """
             mutation {
-                userLearnKanji(username: "test", kanji: "一") {
+                userLearntKanji(username: "test", kanji: "一") {
                     username
                     role
                 }
