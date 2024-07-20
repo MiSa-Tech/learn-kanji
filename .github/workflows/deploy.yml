@@ -19,6 +19,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    outputs:
+      release_version: ${{ steps.get-version.outputs.release_version }}
+      backend_version: ${{ steps.get-version.outputs.backend_version }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,14 +34,16 @@ jobs:
           distribution: 'temurin'
           architecture: x64
 
-      - name: Get release version
-        run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_ENV
+      - name: Set release and backend versions for environment variables
+        run: |
+          echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_ENV
+          echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_ENV
 
-      - name: Display release version
-        run: echo "Project version is ${{ env.RELEASE_VERSION }}"
-
-      - name: Get backend version
-        run: echo "BACKEND_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_ENV
+      - name: Set release and backend versions for outputs
+        id: get-version
+        run: |
+          echo "release_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true | sed 's/-SNAPSHOT//')" >> $GITHUB_OUTPUT
+          echo "backend_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout=true)" >> $GITHUB_OUTPUT
 
       - name: Build with Maven
         run: mvn clean install
@@ -59,6 +65,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Display release and backend versions
+        run: |
+          echo "Release version is ${{ needs.build.outputs.release_version }}"
+          echo "Backend version is ${{ needs.build.outputs.backend_version }}"
+
+      - name: Set release and backend versions as environment variables
+        run: |
+          echo "RELEASE_VERSION=${{ needs.build.outputs.release_version }}" >> $GITHUB_ENV
+          echo "BACKEND_VERSION=${{ needs.build.outputs.backend_version }}" >> $GITHUB_ENV
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -74,5 +90,5 @@ jobs:
             docker rm backend || true
             docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }} || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
-            docker run -d --name backend -p 80:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
+            docker run -d --name backend -p 8080:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
           EOF
