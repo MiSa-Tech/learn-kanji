@@ -2,8 +2,10 @@ package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
 import com.ms.learnkanji.exceptions.InvalidInputException;
+import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.results.KanjiResult;
 import com.ms.learnkanji.repositories.KanjiResultRepository;
+import com.ms.learnkanji.repositories.UserRepository;
 import com.ms.learnkanji.services.KanjiResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,14 @@ import java.util.List;
 
 @Service
 public class ImplKanjiResultService implements KanjiResultService {
+    private final UserRepository userRepository;
+
     private final KanjiResultRepository kanjiResultRepository;
 
     @Autowired
-    public ImplKanjiResultService(KanjiResultRepository kanjiResultRepository) {
+    public ImplKanjiResultService(UserRepository userRepository,
+                                  KanjiResultRepository kanjiResultRepository) {
+        this.userRepository = userRepository;
         this.kanjiResultRepository = kanjiResultRepository;
     }
 
@@ -35,7 +41,10 @@ public class ImplKanjiResultService implements KanjiResultService {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
 
-        List<KanjiResult> kanjiResultList = kanjiResultRepository.findBestShouldLearnKanji(username, pageNum, pageSize);
-        return kanjiResultList;
+        userRepository.findByUsername(username).orElseThrow(
+                () -> new NotFoundException(MessageError.User.USER_NOT_FOUND)
+        );
+
+        return kanjiResultRepository.findBestShouldLearnKanji(username, pageNum, pageSize);
     }
 }
