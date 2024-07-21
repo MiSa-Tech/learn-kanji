@@ -6,4 +6,4 @@ UNWIND kanjiList AS kanjiChar
 // Match the Kanji node corresponding to each character
 MATCH (k:Kanji {value: kanjiChar})
 // Create the PART_OF relationship
-MERGE (k)-[:PART_OF]->(v)
+MERGE (k)-[:PART_OF]->(v);
