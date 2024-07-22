@@ -26,6 +26,22 @@ class KanjiResultRepositoryTest {
     @Autowired
     private Driver driver;
 
+    @BeforeEach
+    void setUp() {
+        // load dataset
+        try (Session session = driver.session()) {
+            String cypher = Files.readString(Path.of(new ClassPathResource("test-data.cypher").getURI()));
+            String[] queries = cypher.split("(?<=;\\s*)"); // Split queries by semicolon
+            for (String query : queries) {
+                if (!query.trim().isEmpty()) { // Ensure the query is not empty
+                    session.run(query.trim());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @AfterEach
     void tearDown() {
         Session session = driver.session();
@@ -36,18 +52,6 @@ class KanjiResultRepositoryTest {
     @Test
     void testFindBestShouldLearnKanji_thenReturnKanjiResult() {
         // given
-        // load dataset
-        try (Session session = driver.session()) {
-            String cypher = Files.readString(Path.of(new ClassPathResource("test-data.cypher").getURI()));
-            String[] queries = cypher.split("(?<=;\\s*)"); // Split queries by semicolon
-            for (String query : queries) {
-                if (!query.trim().isEmpty()) { // Ensure the query is not empty
-                    session.run(query.trim());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // when
         List<KanjiResult> kanjiResult = kanjiResultRepository.findBestShouldLearnKanji("test", 0, 10);
@@ -58,18 +62,6 @@ class KanjiResultRepositoryTest {
     @Test
     void findBestShouldLearnKanjiForBeginner_Return3KanjiResult() {
         // given
-        // load dataset
-        try (Session session = driver.session()) {
-            String cypher = Files.readString(Path.of(new ClassPathResource("test-data.cypher").getURI()));
-            String[] queries = cypher.split("(?<=;\\s*)"); // Split queries by semicolon
-            for (String query : queries) {
-                if (!query.trim().isEmpty()) { // Ensure the query is not empty
-                    session.run(query.trim());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // when
         // test2 does not exist in the database

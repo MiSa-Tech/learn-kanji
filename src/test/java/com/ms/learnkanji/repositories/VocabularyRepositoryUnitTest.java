@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @DataNeo4jTest
 @ActiveProfiles("test")
-public class VocabularyRepositoryUnitTest {
+class VocabularyRepositoryUnitTest {
     @Autowired
     private VocabularyRepository vocabularyRepository;
 
