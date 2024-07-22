@@ -14,6 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -34,21 +38,6 @@ class UserServiceUnitTest {
     void setUp() {
         // initialize the service
         userService = new ImplUserService(userRepository, kanjiRepository, passwordEncoder);
-        // save a user
-        User user = new User();
-        user.setUsername("test");
-        user.setPassword("test");
-        // save a kanji
-        List<String> meaning = List.of("one");
-        Kanji kanji = new Kanji("一", null, null, null,
-                5, meaning, null, null);
-        kanjiRepository.save(kanji);
-        userRepository.save(user);
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
     }
 
     @Test
@@ -67,7 +56,6 @@ class UserServiceUnitTest {
 
     @Test
     void whenFindByEmptyUsername_thenThrowException() {
-        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any(User.class));
         Assertions.assertThrows(InvalidInputException.class, () -> {
             userService.getUserByUsername(null);
         })
@@ -82,11 +70,11 @@ class UserServiceUnitTest {
         user.setUsername("test");
         user.setPassword("test");
         // when
-        Mockito.lenient().when(userRepository.findAll()).thenReturn(List.of(user));
-
+        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Order.asc("username")));
+        Mockito.when(userRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(user)));
         // then
-        //List<User> found = userService.getAllUsers(0, 1);
-        //Assertions.assertNotNull(found);
+        List<User> found = userService.getAllUsers(0, 1);
+        Assertions.assertNotNull(found);
     }
 
     @Test

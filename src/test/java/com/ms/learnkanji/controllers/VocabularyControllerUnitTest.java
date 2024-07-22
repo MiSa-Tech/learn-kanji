@@ -15,7 +15,7 @@ import org.springframework.graphql.test.tester.GraphQlTester;
 import java.util.List;
 
 @GraphQlTest(VocabularyController.class)
-public class VocabularyControllerUnitTest {
+class VocabularyControllerUnitTest {
     @Autowired
     private GraphQlTester graphQlTester;
 

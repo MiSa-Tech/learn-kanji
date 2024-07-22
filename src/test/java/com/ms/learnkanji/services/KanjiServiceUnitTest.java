@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,5 +61,18 @@ class KanjiServiceUnitTest {
         });
     }
 
+    @Test
+    void whenFindByJlpt_thenReturnKanjiList() {
+        // given
+        List<String> meaning = List.of("one");
+        Kanji kanji = new Kanji("一", null, null, null,
+                5, meaning, null, null);
+        // when
+        Mockito.when(kanjiRepository.findByJlpt(5, 0, 1)).thenReturn(List.of(kanji));
 
+        // then
+        List<Kanji> found = kanjiService.getKanjiByJlpt(5, 0, 1);
+        Assertions.assertEquals(1, found.size());
+        Assertions.assertEquals(kanji, found.get(0));
+    }
 }

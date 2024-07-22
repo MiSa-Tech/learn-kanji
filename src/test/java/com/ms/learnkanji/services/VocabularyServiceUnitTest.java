@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class VocabularyServiceUnitTest {
+class VocabularyServiceUnitTest {
     @Mock
     private VocabularyRepository vocabularyRepository;
 
@@ -26,6 +26,7 @@ public class VocabularyServiceUnitTest {
     void setUp() {
         vocabularyService = new ImplVocabularyService(vocabularyRepository);
     }
+
     @Test
     void whenFindByOriginal_thenReturnVocabulary() {
         // given
