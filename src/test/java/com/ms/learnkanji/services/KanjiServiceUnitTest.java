@@ -27,17 +27,8 @@ class KanjiServiceUnitTest {
     void setUp() {
         // initialize the service
         kanjiService = new ImplKanjiService(kanjiRepository);
-        // save a kanji
-        List<String> meaning = List.of("one");
-        Kanji kanji = new Kanji("一", null, null, null,
-                5, meaning, null, null);
-        kanjiRepository.save(kanji);
     }
 
-    @AfterEach
-    void tearDown() {
-        kanjiRepository.deleteAll();
-    }
 
     @Test
     void whenFindByValue_thenReturnKanji() {
@@ -55,9 +46,17 @@ class KanjiServiceUnitTest {
 
     @Test
     void whenFindByEmptyValue_thenThrowException() {
-        Mockito.verify(kanjiRepository, Mockito.times(1)).save(Mockito.any(Kanji.class));
+        Assertions.assertThrows(InvalidInputException.class, () -> {
+            kanjiService.getKanjiByValue("");
+        });
+    }
+
+    @Test
+    void whenFindByNullValue_thenThrowException() {
         Assertions.assertThrows(InvalidInputException.class, () -> {
             kanjiService.getKanjiByValue(null);
         });
     }
+
+
 }

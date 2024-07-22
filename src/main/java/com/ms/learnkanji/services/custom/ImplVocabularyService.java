@@ -22,30 +22,27 @@ public class ImplVocabularyService implements VocabularyService {
     @Override
     public Vocabulary createVocabulary(String original, List<String> furigana,
                                        List<String> meaning, Integer jlpt) {
-        if (original == null | original.isEmpty()) {
+        if (original == null || original.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.ORIGINAL_CANNOT_BE_NULL);
         }
-        if (furigana == null | furigana.isEmpty()) {
+        if (furigana == null || furigana.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.FURIGANA_CANNOT_BE_NULL);
         }
-        if (meaning == null | meaning.isEmpty()) {
+        if (meaning == null || meaning.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.MEANING_CANNOT_BE_NULL);
         }
         Vocabulary toSave = new Vocabulary();
         toSave.setOriginal(original);
         toSave.setJlpt(jlpt);
-        if (furigana != null) {
-            furigana.forEach(toSave::addFurigana);
-        }
-        if (meaning != null) {
-            meaning.forEach(toSave::addMeaning);
-        }
+        furigana.forEach(toSave::addFurigana);
+        meaning.forEach(toSave::addMeaning);
+
         return vocabularyRepository.save(toSave);
     }
 
     @Override
     public Vocabulary getVocabularyByOriginal(String original) {
-        if (original == null | original.isEmpty()) {
+        if (original == null || original.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.ORIGINAL_CANNOT_BE_NULL);
         }
         return vocabularyRepository.findByOriginal(original)
