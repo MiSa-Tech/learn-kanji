@@ -79,9 +79,15 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "NEO4J_URI=${{ secrets.NEO4J_URI }}" > .env
+            echo "NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }}" >> .env
+            echo "NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }}" >> .env
             docker stop backend || true
             docker rm backend || true
             docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }} || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
-            docker run -d --name backend -p 8080:8080 -e NEO4J_URI=${{ secrets.NEO4J_URI }} -e NEO4J_USERNAME=${{ secrets.NEO4J_USERNAME }} -e NEO4J_PASSWORD=${{ secrets.NEO4J_PASSWORD }} -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} -e JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }} ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
+            docker run -d --name backend -p 8080:8080 --env-file .env ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_IMAGE }}:${{ env.RELEASE_VERSION }}
+            rm .env
           EOF
