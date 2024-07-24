@@ -9,4 +9,12 @@ public interface VocabularyService {
                                 List<String> meaning, Integer jlpt);
 
     Vocabulary getVocabularyByOriginal(String original);
+
+    List<Vocabulary> getVocabularyByJlpt(Integer jlpt, Integer pageNum, Integer pageSize);
+
+    List<Vocabulary> getVocabularyByFurigana(String furigana, Integer pageNum, Integer pageSize);
+
+    List<Vocabulary> getVocabularyByMeaning(String meaning, Integer pageNum, Integer pageSize);
+
+    List<Vocabulary> getAllVocabulary(Integer pageNum, Integer pageSize);
 }

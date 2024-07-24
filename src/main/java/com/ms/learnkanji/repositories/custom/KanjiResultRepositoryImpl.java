@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class ImplKanjiResultRepository implements KanjiResultRepository {
+public class KanjiResultRepositoryImpl implements KanjiResultRepository {
 
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public ImplKanjiResultRepository(SessionFactory sessionFactory) {
+    public KanjiResultRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

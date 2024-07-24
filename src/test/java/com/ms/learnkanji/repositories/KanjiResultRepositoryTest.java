@@ -20,7 +20,7 @@ import java.util.List;
 class KanjiResultRepositoryTest {
 
     @Autowired
-    @Qualifier("implKanjiResultRepository")
+    @Qualifier("kanjiResultRepositoryImpl")
     private KanjiResultRepository kanjiResultRepository;
 
     @Autowired

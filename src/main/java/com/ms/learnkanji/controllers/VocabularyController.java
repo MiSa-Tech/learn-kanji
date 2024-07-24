@@ -31,4 +31,31 @@ public class VocabularyController {
     public Vocabulary findVocabularyByOriginal(@Argument String original) {
         return vocabularyService.getVocabularyByOriginal(original);
     }
+
+    @QueryMapping
+    public List<Vocabulary> findVocabularyByJlpt(@Argument Integer jlpt,
+                                                 @Argument Integer pageNum,
+                                                 @Argument Integer pageSize) {
+        return vocabularyService.getVocabularyByJlpt(jlpt, pageNum, pageSize);
+    }
+
+    @QueryMapping
+    public List<Vocabulary> findVocabularyByFurigana(@Argument String furigana,
+                                                     @Argument Integer pageNum,
+                                                     @Argument Integer pageSize) {
+        return vocabularyService.getVocabularyByFurigana(furigana, pageNum, pageSize);
+    }
+
+    @QueryMapping
+    public List<Vocabulary> findVocabularyByMeaning(@Argument String meaning,
+                                                     @Argument Integer pageNum,
+                                                     @Argument Integer pageSize) {
+        return vocabularyService.getVocabularyByMeaning(meaning, pageNum, pageSize);
+    }
+
+    @QueryMapping
+    public List<Vocabulary> findAllVocabulary(@Argument Integer pageNum,
+                                              @Argument Integer pageSize) {
+        return vocabularyService.getAllVocabulary(pageNum, pageSize);
+    }
 }

@@ -7,6 +7,9 @@ import com.ms.learnkanji.models.Vocabulary;
 import com.ms.learnkanji.repositories.VocabularyRepository;
 import com.ms.learnkanji.services.VocabularyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,4 +51,66 @@ public class ImplVocabularyService implements VocabularyService {
         return vocabularyRepository.findByOriginal(original)
                 .orElseThrow(() -> new NotFoundException(MessageError.Vocabulary.VOCABULARY_CANNOT_BE_FOUND));
     }
+
+    @Override
+    public List<Vocabulary> getVocabularyByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
+        if (jlpt < 1 || jlpt > 5) {
+            throw new InvalidInputException(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE);
+        }
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        Sort sort = Sort.by("original");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        return vocabularyRepository.findByJlpt(jlpt, pageable).getContent();
+    }
+
+    @Override
+    public List<Vocabulary> getVocabularyByFurigana(String furigana, Integer pageNum, Integer pageSize) {
+        if (furigana == null || furigana.isEmpty()) {
+            throw new InvalidInputException(MessageError.Vocabulary.FURIGANA_CANNOT_BE_NULL);
+        }
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        Sort sort = Sort.by("original");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        return vocabularyRepository.findByFurigana(furigana, pageable).getContent();
+    }
+
+    @Override
+    public List<Vocabulary> getVocabularyByMeaning(String meaning, Integer pageNum, Integer pageSize) {
+        if (meaning == null || meaning.isEmpty()) {
+            throw new InvalidInputException(MessageError.Vocabulary.MEANING_CANNOT_BE_NULL);
+        }
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        Sort sort = Sort.by("original");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        return vocabularyRepository.findByMeaning(meaning, pageable).getContent();
+    }
+
+    @Override
+    public List<Vocabulary> getAllVocabulary(Integer pageNum, Integer pageSize) {
+        if (pageNum < 0) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
+        }
+        if (pageSize < 1) {
+            throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
+        }
+        Sort sort = Sort.by("original");
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        return vocabularyRepository.findAllVocabulary(pageable).getContent();
+    }
+
 }

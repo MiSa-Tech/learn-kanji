@@ -6,6 +6,10 @@ type Query {
     findKanjiByStrokes(strokes: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
     findVocabularyByOriginal(original: String!): Vocabulary
+    findVocabularyByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findVocabularyByFurigana(furigana: String!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findVocabularyByMeaning(meaning: String!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findAllVocabulary(pageNum: Int!, pageSize: Int!): [Vocabulary]!
     findBestShouldLearnKanji(username: String!, pageNum: Int!, pageSize: Int!): [KanjiResult]!
 }
 

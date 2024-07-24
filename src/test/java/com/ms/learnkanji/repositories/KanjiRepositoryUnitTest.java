@@ -70,7 +70,7 @@ class KanjiRepositoryUnitTest {
 
         // then
         Assertions.assertTrue(kanjiOptional.isPresent());
-        // Assertions.assertEquals(kanji, kanjiOptional.get());
+        Assertions.assertEquals(kanji.getValue(), kanjiOptional.get().getValue());
     }
 
     @Test

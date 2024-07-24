@@ -1,0 +1,73 @@
+# This file was generated. Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+"Indicates an Input Object is a OneOf Input Object."
+directive @oneOf on INPUT_OBJECT
+
+type AuthenticationResponse {
+    id: String!
+    jwt: String!
+    role: String!
+    username: String!
+}
+
+type Kanji {
+    PART_OF: [Vocabulary]
+    frequency: Int
+    grade: Int
+    id: ID!
+    jlpt: Int
+    meaning: [String]!
+    readings_kun: [String]
+    readings_on: [String]
+    strokes: Int
+    value: String!
+}
+
+type KanjiResult {
+    kanji: Kanji!
+    occurrence: Int!
+}
+
+type Mutation {
+    createKanji(frequency: Int, grade: Int, jlpt: Int, meaning: [String]!, readings_kun: [String], readings_on: [String], strokes: Int, value: String!): Kanji!
+    createUser(jlpt: Int, password: String!, username: String!): User!
+    createVocabulary(furigana: [String]!, jlpt: Int, meaning: [String]!, original: String!): Vocabulary!
+    login(password: String!, username: String!): AuthenticationResponse!
+    userLearntKanji(kanji: String!, username: String!): User!
+}
+
+type Query {
+    findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
+    findBestShouldLearnKanji(pageNum: Int!, pageSize: Int!, username: String!): [KanjiResult]!
+    findKanjiByGrade(grade: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Kanji]!
+    findKanjiByStrokes(pageNum: Int!, pageSize: Int!, strokes: Int!): [Kanji]!
+    findKanjiByValue(value: String!): Kanji
+    findUserByUsername(username: String!): User
+    findVocabularyByFurigana(furigana: String!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findVocabularyByJlpt(jlpt: Int!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findVocabularyByMeaning(meaning: String!, pageNum: Int!, pageSize: Int!): [Vocabulary]!
+    findVocabularyByOriginal(original: String!): Vocabulary
+}
+
+type User {
+    LEARNT_KANJI: [Kanji]
+    LEARNT_VOCABULARY: [Vocabulary]
+    id: ID!
+    jlpt: Int
+    role: String!
+    username: String!
+}
+
+type Vocabulary {
+    furigana: [String]!
+    id: ID!
+    jlpt: Int
+    meaning: [String]!
+    original: String!
+}

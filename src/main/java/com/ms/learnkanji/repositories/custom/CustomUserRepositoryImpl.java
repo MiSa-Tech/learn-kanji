@@ -11,11 +11,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ImplCustomUserRepository implements CustomUserRepository {
+public class CustomUserRepositoryImpl implements CustomUserRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public ImplCustomUserRepository(SessionFactory sessionFactory) {
+    public CustomUserRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
