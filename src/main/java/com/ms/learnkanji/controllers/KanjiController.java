@@ -2,12 +2,14 @@ package com.ms.learnkanji.controllers;
 
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.Vocabulary;
+import com.ms.learnkanji.input.pagination.PaginationInput;
 import com.ms.learnkanji.services.KanjiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class KanjiController {
     }
 
     @MutationMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Kanji createKanji(@Argument String value, @Argument Integer strokes,
                              @Argument Integer grade, @Argument Integer frequency,
                              @Argument Integer jlpt, @Argument("meaning") List<String> meaning,
@@ -36,9 +39,20 @@ public class KanjiController {
 
     @QueryMapping
     public List<Kanji> findKanjiByJlpt(@Argument Integer jlpt,
-                                        @Argument Integer pageNum,
-                                        @Argument Integer pageSize) {
-        return kanjiService.getKanjiByJlpt(jlpt, pageNum, pageSize);
+                                       @Argument PaginationInput paginationInput) {
+        return kanjiService.getKanjiByJlpt(jlpt, paginationInput.getPageNum(), paginationInput.getPageSize(), paginationInput.getOrdering());
+    }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes,
+                                          @Argument PaginationInput paginationInput) {
+        return kanjiService.getKanjiByStrokes(strokes, paginationInput.getPageNum(), paginationInput.getPageSize(), paginationInput.getOrdering());
+    }
+
+    @QueryMapping
+    public List<Kanji> findKanjiByGrade(@Argument int grade,
+                                        @Argument PaginationInput paginationInput) {
+        return kanjiService.getKanjiByGrade(grade, paginationInput.getPageNum(), paginationInput.getPageSize(), paginationInput.getOrdering());
     }
 
     @SchemaMapping(typeName = "Kanji", field = "readings_on")
@@ -54,19 +68,5 @@ public class KanjiController {
     @SchemaMapping(typeName = "Kanji", field = "PART_OF")
     public List<Vocabulary> listPartOf(Kanji kanji) {
         return kanji.getPartOf();
-    }
-
-    @QueryMapping
-    public List<Kanji> findKanjiByStrokes(@Argument Integer strokes,
-                                          @Argument Integer pageNum,
-                                          @Argument Integer pageSize) {
-        return kanjiService.getKanjiByStrokes(strokes, pageNum, pageSize);
-    }
-
-    @QueryMapping
-    public List<Kanji> findKanjiByGrade(@Argument int grade,
-                                        @Argument Integer pageNum,
-                                        @Argument Integer pageSize) {
-        return kanjiService.getKanjiByGrade(grade, pageNum, pageSize);
     }
 }

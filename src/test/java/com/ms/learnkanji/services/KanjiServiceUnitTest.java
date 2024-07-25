@@ -1,5 +1,6 @@
 package com.ms.learnkanji.services;
 
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.repositories.KanjiRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -68,10 +70,11 @@ class KanjiServiceUnitTest {
         Kanji kanji = new Kanji("一", null, null, null,
                 5, meaning, null, null);
         // when
-        Mockito.when(kanjiRepository.findByJlpt(5, 0, 1)).thenReturn(List.of(kanji));
+        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Order.asc("k.value")));
+        Mockito.when(kanjiRepository.findByJlpt(5, pageable)).thenReturn(new PageImpl<>(List.of(kanji)));
 
         // then
-        List<Kanji> found = kanjiService.getKanjiByJlpt(5, 0, 1);
+        List<Kanji> found = kanjiService.getKanjiByJlpt(5, 0, 1, Ordering.ASC);
         Assertions.assertEquals(1, found.size());
         Assertions.assertEquals(kanji, found.get(0));
     }

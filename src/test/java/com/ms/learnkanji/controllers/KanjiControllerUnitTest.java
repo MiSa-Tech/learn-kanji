@@ -1,6 +1,7 @@
 package com.ms.learnkanji.controllers;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,13 +87,13 @@ class KanjiControllerUnitTest {
         int pageNum = 0;
         int pageSize = 10;
         // when
-        BDDMockito.given(kanjiService.getKanjiByJlpt(jlpt, pageNum, pageSize)).willReturn(List.of(kanji));
+        BDDMockito.given(kanjiService.getKanjiByJlpt(jlpt, pageNum, pageSize, Ordering.ASC)).willReturn(List.of(kanji));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findKanjiByJlpt(jlpt: 5, pageNum: 0, pageSize: 10) {
+                findKanjiByJlpt(jlpt: 5) {
                     value
                 }
             }
