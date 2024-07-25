@@ -1,6 +1,7 @@
 package com.ms.learnkanji.controllers;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.results.KanjiResult;
@@ -34,12 +35,12 @@ class KanjiResultControllerTest {
         KanjiResult kanjiResult2 = new KanjiResult(kanji2, 2);
         List<KanjiResult> kanjiResults = List.of(kanjiResult1, kanjiResult2);
         // when
-        BDDMockito.given(kanjiResultService.getBestShouldLearnKanji("test", 0, 10)).willReturn(kanjiResults);
+        BDDMockito.given(kanjiResultService.getBestShouldLearnKanji("test", 0, 10, Ordering.ASC)).willReturn(kanjiResults);
         // then
         // language=GraphQL
         String document = """
             query {
-                findBestShouldLearnKanji(username: "test", pageNum: 0, pageSize: 10) {
+                findBestShouldLearnKanji(username: "test") {
                     kanji {
                         value
                     }
@@ -60,12 +61,12 @@ class KanjiResultControllerTest {
         // given
         String username = "test";
         // when
-        BDDMockito.given(kanjiResultService.getBestShouldLearnKanji(username, 0, 10)).willThrow(new NotFoundException(MessageError.User.USER_NOT_FOUND));
+        BDDMockito.given(kanjiResultService.getBestShouldLearnKanji(username, 0, 10, Ordering.DESC)).willThrow(new NotFoundException(MessageError.User.USER_NOT_FOUND));
         // then
         // language=GraphQL
         String document = """
             query {
-                findBestShouldLearnKanji(username: "test", pageNum: 0, pageSize: 10) {
+                findBestShouldLearnKanji(username: "test", paginationInput: {pageNum: 0, pageSize: 10, ordering: DESC}) {
                     kanji {
                         value
                     }

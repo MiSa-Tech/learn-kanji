@@ -1,5 +1,6 @@
 package com.ms.learnkanji.repositories;
 
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.models.results.KanjiResult;
 import org.junit.jupiter.api.*;
 import org.neo4j.driver.Driver;
@@ -54,7 +55,7 @@ class KanjiResultRepositoryTest {
         // given
 
         // when
-        List<KanjiResult> kanjiResult = kanjiResultRepository.findBestShouldLearnKanji("test", 0, 10);
+        List<KanjiResult> kanjiResult = kanjiResultRepository.findBestShouldLearnKanji("test", 0, 10, Ordering.ASC);
         // then
         Assertions.assertEquals(5, kanjiResult.size());
     }
@@ -65,7 +66,7 @@ class KanjiResultRepositoryTest {
 
         // when
         // test2 does not exist in the database
-        List<KanjiResult> kanjiResult = kanjiResultRepository.findBestShouldLearnKanji("test2", 0, 10);
+        List<KanjiResult> kanjiResult = kanjiResultRepository.findBestShouldLearnKanji("test2", 0, 10, Ordering.ASC);
         // then
         Assertions.assertEquals(3, kanjiResult.size());
     }

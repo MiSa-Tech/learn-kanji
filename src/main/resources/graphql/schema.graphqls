@@ -1,7 +1,7 @@
 type Query {
     # User
     findUserByUsername(username: String!): User
-    findAllUsers(pageNum: Int!, pageSize: Int!): [User]!
+    findAllUsers(paginationInput: PaginationInput = {pageNum: 0, pageSize: 10, ordering: ASC}): [User]!
     # Kanji
     findKanjiByValue(value: String!): Kanji
     findKanjiByJlpt(jlpt: Int!, paginationInput: PaginationInput = {pageNum: 0, pageSize: 10, ordering: ASC}): [Kanji]!
@@ -14,7 +14,7 @@ type Query {
     findVocabularyByMeaning(meaning: String!, paginationInput: PaginationInput = {pageNum: 0, pageSize: 10, ordering: ASC}): [Vocabulary]!
     findAllVocabulary(paginationInput: PaginationInput = {pageNum: 0, pageSize: 10, ordering: ASC}): [Vocabulary]!
     # KanjiResult
-    findBestShouldLearnKanji(username: String!, pageNum: Int!, pageSize: Int!): [KanjiResult]!
+    findBestShouldLearnKanji(username: String!, paginationInput: PaginationInput = {pageNum: 0, pageSize: 10, ordering: ASC}): [KanjiResult]!
 }
 
 type Mutation {

@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
@@ -70,10 +71,10 @@ class UserServiceUnitTest {
         user.setUsername("test");
         user.setPassword("test");
         // when
-        Pageable pageable = PageRequest.of(0, 1, Sort.by(Sort.Order.asc("username")));
-        Mockito.when(userRepository.findAll(pageable)).thenReturn(new PageImpl<>(List.of(user)));
+        Pageable pageable = PageRequest.of(0, 1, Sort.by("u.username").ascending());
+        Mockito.when(userRepository.findAllUser(pageable)).thenReturn(new PageImpl<>(List.of(user)));
         // then
-        List<User> found = userService.getAllUsers(0, 1);
+        List<User> found = userService.getAllUsers(0, 1, Ordering.ASC);
         Assertions.assertNotNull(found);
     }
 

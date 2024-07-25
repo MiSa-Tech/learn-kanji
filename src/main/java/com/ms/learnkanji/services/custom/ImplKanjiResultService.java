@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.results.KanjiResult;
@@ -27,7 +28,7 @@ public class ImplKanjiResultService implements KanjiResultService {
 
 
     @Override
-    public List<KanjiResult> getBestShouldLearnKanji(String username, Integer pageNum, Integer pageSize) {
+    public List<KanjiResult> getBestShouldLearnKanji(String username, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (username == null) {
             throw new InvalidInputException(MessageError.User.USERNAME_CANNOT_BE_NULL);
         }
@@ -45,6 +46,6 @@ public class ImplKanjiResultService implements KanjiResultService {
                 () -> new NotFoundException(MessageError.User.USER_NOT_FOUND)
         );
 
-        return kanjiResultRepository.findBestShouldLearnKanji(username, pageNum, pageSize);
+        return kanjiResultRepository.findBestShouldLearnKanji(username, pageNum, pageSize, ordering);
     }
 }

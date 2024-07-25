@@ -1,5 +1,6 @@
 package com.ms.learnkanji.repositories.custom;
 
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.models.results.KanjiResult;
 import com.ms.learnkanji.repositories.KanjiResultRepository;
 import org.neo4j.ogm.session.Session;
@@ -21,9 +22,9 @@ public class ImplKanjiResultRepository implements KanjiResultRepository {
     }
 
     @Override
-    public List<KanjiResult> findBestShouldLearnKanji(String username, Integer pageNum, Integer pageSize) {
+    public List<KanjiResult> findBestShouldLearnKanji(String username, Integer pageNum, Integer pageSize, Ordering ordering) {
         Session session = sessionFactory.openSession();
-        String query = """
+        String query = String.format("""
                 MATCH (u:User {username: $username})-[:LEARNT_KANJI]->(n:Kanji)
                 WITH collect(n) AS kanjiList    
                            
@@ -34,10 +35,10 @@ public class ImplKanjiResultRepository implements KanjiResultRepository {
                 WHERE size(kanjisNotInList) = 1
                 WITH kanjisNotInList[0] AS kanji
                 RETURN kanji, count(*) as occurrence
-                ORDER BY occurrence DESC
+                ORDER BY occurrence %s
                 SKIP $skip
                 LIMIT $limit
-                """;
+                """, ordering.getName());
 
         List<KanjiResult> listKanjiResults = session.queryDto(query, Map.of("username", username, "skip", pageNum * pageSize, "limit", pageSize), KanjiResult.class);
         return listKanjiResults;

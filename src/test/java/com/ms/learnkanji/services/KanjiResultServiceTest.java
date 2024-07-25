@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.Role;
@@ -43,11 +44,11 @@ class KanjiResultServiceTest {
 
         // when
         // verify that the method is not called
-        Mockito.verify(kanjiResultRepository, Mockito.times(0)).findBestShouldLearnKanji(username, 0, 10);
+        Mockito.verify(kanjiResultRepository, Mockito.times(0)).findBestShouldLearnKanji(username, 0, 10, Ordering.ASC);
 
         // then
         Assertions.assertThrows(NotFoundException.class, () -> {
-            kanjiResultService.getBestShouldLearnKanji(username, 0, 10);
+            kanjiResultService.getBestShouldLearnKanji(username, 0, 10, Ordering.ASC);
         })
                 .getMessage()
                 .equals(MessageError.User.USER_NOT_FOUND);
@@ -63,16 +64,16 @@ class KanjiResultServiceTest {
                 5, List.of("two"), null, null);
         KanjiResult kanjiResult1 = new KanjiResult(kanji1, 1);
         KanjiResult kanjiResult2 = new KanjiResult(kanji2, 2);
-        List<KanjiResult> kanjiResults = List.of(kanjiResult1, kanjiResult2);
+        List<KanjiResult> kanjiResults = List.of(kanjiResult2, kanjiResult1);
 
         // when
         // verify that the method is called
         // verify that NotFoundException is not thrown
 
         Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(new User(username, Role.USER, 5)));
-        Mockito.when(kanjiResultRepository.findBestShouldLearnKanji(username, 0, 10)).thenReturn(kanjiResults);
+        Mockito.when(kanjiResultRepository.findBestShouldLearnKanji(username, 0, 10, Ordering.DESC)).thenReturn(kanjiResults);
 
         // then
-        Assertions.assertEquals(kanjiResults, kanjiResultService.getBestShouldLearnKanji(username, 0, 10));
+        Assertions.assertEquals(kanjiResults, kanjiResultService.getBestShouldLearnKanji(username, 0, 10, Ordering.DESC));
     }
 }

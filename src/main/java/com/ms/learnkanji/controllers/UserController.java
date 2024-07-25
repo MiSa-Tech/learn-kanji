@@ -3,6 +3,7 @@ package com.ms.learnkanji.controllers;
 import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.models.User;
 import com.ms.learnkanji.models.Vocabulary;
+import com.ms.learnkanji.input.pagination.PaginationInput;
 import com.ms.learnkanji.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -34,9 +35,8 @@ public class UserController {
 
     @QueryMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public List<User> findAllUsers(@Argument Integer pageNum,
-                                   @Argument Integer pageSize) {
-        return userService.getAllUsers(pageNum, pageSize);
+    public List<User> findAllUsers(@Argument PaginationInput paginationInput) {
+        return userService.getAllUsers(paginationInput.getPageNum(), paginationInput.getPageSize(), paginationInput.getOrdering());
     }
 
     @MutationMapping

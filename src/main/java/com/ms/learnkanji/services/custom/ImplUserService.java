@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
@@ -12,6 +13,7 @@ import com.ms.learnkanji.repositories.UserRepository;
 import com.ms.learnkanji.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,15 +49,16 @@ public class ImplUserService implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers(Integer pageNum, Integer pageSize) {
+    public List<User> getAllUsers(Integer pageNum, Integer pageSize, Ordering ordering) {
         if (pageNum < 0) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
         }
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        Sort sort = Sort.by(Sort.Order.asc("username"));
-        return userRepository.findAll(PageRequest.of(pageNum, pageSize, sort)).toList();
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("u.username").ascending() : Sort.by("u.username").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        return userRepository.findAllUser(pageable).getContent();
     }
 
     @Override
