@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.AlreadyPresentException;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
@@ -8,6 +9,9 @@ import com.ms.learnkanji.models.Kanji;
 import com.ms.learnkanji.repositories.KanjiRepository;
 import com.ms.learnkanji.services.KanjiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,7 +67,7 @@ public class ImplKanjiService implements KanjiService {
     }
 
     @Override
-    public List<Kanji> getKanjiByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
+    public List<Kanji> getKanjiByJlpt(Integer jlpt, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (jlpt < 1 || jlpt > 5) {
             throw new InvalidInputException(MessageError.Kanji.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE);
         }
@@ -73,11 +77,14 @@ public class ImplKanjiService implements KanjiService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        return kanjiRepository.findByJlpt(jlpt, pageNum, pageSize);
+
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("k.value").ascending() : Sort.by("k.value").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        return kanjiRepository.findByJlpt(jlpt, pageable).getContent();
     }
 
     @Override
-    public List<Kanji> getKanjiByStrokes(Integer strokes, Integer pageNum, Integer pageSize) {
+    public List<Kanji> getKanjiByStrokes(Integer strokes, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (strokes <= 0) {
             throw new InvalidInputException(MessageError.Kanji.STROKES_NUMBER_NEGATIVE);
         }
@@ -87,11 +94,13 @@ public class ImplKanjiService implements KanjiService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        return kanjiRepository.findByStrokes(strokes, pageNum, pageSize);
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("k.value").ascending() : Sort.by("k.value").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        return kanjiRepository.findByStrokes(strokes, pageable).getContent();
     }
 
     @Override
-    public List<Kanji> getKanjiByGrade(Integer grade, Integer pageNum, Integer pageSize) {
+    public List<Kanji> getKanjiByGrade(Integer grade, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (grade < 1 | grade > 12) {
             throw new InvalidInputException(MessageError.Kanji.GRADE_INVALID);
         }
@@ -101,6 +110,8 @@ public class ImplKanjiService implements KanjiService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        return kanjiRepository.findByGrade(grade, pageNum, pageSize);
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("k.value").ascending() : Sort.by("k.value").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
+        return kanjiRepository.findByGrade(grade, pageable).getContent();
     }
 }
