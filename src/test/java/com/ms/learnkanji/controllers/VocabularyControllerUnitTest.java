@@ -1,6 +1,7 @@
 package com.ms.learnkanji.controllers;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Vocabulary;
@@ -88,14 +89,14 @@ class VocabularyControllerUnitTest {
         List<String> meaning_2 = List.of("every day");
         Vocabulary vocabulary_2 = new Vocabulary("毎日", furigana_2, meaning_2, 5);
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByJlpt(5, 0, 10))
+        BDDMockito.given(vocabularyService.getVocabularyByJlpt(5, 0, 10, Ordering.ASC))
                 .willReturn(List.of(vocabulary_1, vocabulary_2));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByJlpt(jlpt: 5, pageNum: 0, pageSize: 10) {
+                findVocabularyByJlpt(jlpt: 5) {
                     original
                     jlpt
                 }
@@ -112,52 +113,20 @@ class VocabularyControllerUnitTest {
     }
 
     @Test
-    void whenFindByJlpt_shouldThrowNotFoundException() {
+    void whenFindByJlpt_shouldThrowInvalidInputException() {
         // given
         Integer jlpt = 6;
         Integer pageNum = 0;
         Integer pageSize = 10;
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByJlpt(jlpt, pageNum, pageSize)).willThrow(
-                new NotFoundException(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE));
-
-        // then
-        // language=GraphQL
-        String document = """
-            query {
-                findVocabularyByJlpt(jlpt: 6, pageNum: 0, pageSize: 10) {
-                    original
-                    jlpt
-                }
-            }
-        """;
-
-        graphQlTester.document(document)
-                .execute()
-                .errors()
-                .satisfy(errors -> {
-                            Assertions.assertEquals(1, errors.size());
-                            Assertions.assertEquals(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE,
-                                    errors.get(0).getMessage());
-                        }
-                );
-    }
-
-    @Test
-    void whenFindByJlpt_shouldThrowInvalidInputException() {
-        // given
-        Integer jlpt = 1;
-        Integer pageNum = 0;
-        Integer pageSize = 10;
-        // when
-        BDDMockito.given(vocabularyService.getVocabularyByJlpt(jlpt, pageNum, pageSize)).willThrow(
+        BDDMockito.given(vocabularyService.getVocabularyByJlpt(jlpt, pageNum, pageSize, Ordering.ASC)).willThrow(
                 new InvalidInputException(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByJlpt(jlpt: 1, pageNum: 0, pageSize: 10) {
+                findVocabularyByJlpt(jlpt: 6, paginationInput: {pageNum: 0, pageSize: 10, ordering: ASC}) {
                     original
                     jlpt
                 }
@@ -183,14 +152,14 @@ class VocabularyControllerUnitTest {
         Vocabulary vocabulary_1 = new Vocabulary("毎月", furigana_1, meaning_1, 5);
 
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByFurigana("まいげつ", 0, 10))
+        BDDMockito.given(vocabularyService.getVocabularyByFurigana("まいげ", 0, 10, Ordering.ASC))
                 .willReturn(List.of(vocabulary_1));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByFurigana(furigana: "まいげつ", pageNum: 0, pageSize: 10) {
+                findVocabularyByFurigana(furigana: "まいげ") {
                     original
                     furigana
                 }
@@ -211,14 +180,14 @@ class VocabularyControllerUnitTest {
         Integer pageNum = 0;
         Integer pageSize = 10;
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByFurigana(furigana, pageNum, pageSize))
+        BDDMockito.given(vocabularyService.getVocabularyByFurigana(furigana, pageNum, pageSize, Ordering.ASC))
                 .willThrow(new NotFoundException(MessageError.Vocabulary.VOCABULARY_CANNOT_BE_FOUND));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByFurigana(furigana: "ん", pageNum: 0, pageSize: 10) {
+                findVocabularyByFurigana(furigana: "ん") {
                     original
                     furigana
                 }
@@ -243,14 +212,14 @@ class VocabularyControllerUnitTest {
         Vocabulary vocabulary_1 = new Vocabulary("毎月", furigana_1, meaning_1, 5);
 
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByMeaning("monthly", 0, 10))
+        BDDMockito.given(vocabularyService.getVocabularyByMeaning("month", 0, 10, Ordering.ASC))
                 .willReturn(List.of(vocabulary_1));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByMeaning(meaning: "monthly", pageNum: 0, pageSize: 10) {
+                findVocabularyByMeaning(meaning: "month", paginationInput: {pageNum: 0, pageSize: 10, ordering: ASC}) {
                     original
                     meaning
                 }
@@ -271,14 +240,14 @@ class VocabularyControllerUnitTest {
         Integer pageNum = 0;
         Integer pageSize = 10;
         // when
-        BDDMockito.given(vocabularyService.getVocabularyByMeaning(meaning, pageNum, pageSize))
+        BDDMockito.given(vocabularyService.getVocabularyByMeaning(meaning, pageNum, pageSize, Ordering.ASC))
                 .willThrow(new NotFoundException(MessageError.Vocabulary.VOCABULARY_CANNOT_BE_FOUND));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findVocabularyByMeaning(meaning: "abcde", pageNum: 0, pageSize: 10) {
+                findVocabularyByMeaning(meaning: "abcde", paginationInput: {pageNum: 0, pageSize: 10, ordering: ASC}) {
                     original
                     meaning
                 }
@@ -306,14 +275,14 @@ class VocabularyControllerUnitTest {
         List<String> meaning_2 = List.of("every day");
         Vocabulary vocabulary_2 = new Vocabulary("毎日", furigana_2, meaning_2, 5);
         // when
-        BDDMockito.given(vocabularyService.getAllVocabulary(0, 10))
+        BDDMockito.given(vocabularyService.getAllVocabulary(0, 10, Ordering.DESC))
                 .willReturn(List.of(vocabulary_1, vocabulary_2));
 
         // then
         // language=GraphQL
         String document = """
             query {
-                findAllVocabulary(pageNum: 0, pageSize: 10) {
+                findAllVocabulary(paginationInput: {pageNum: 0, pageSize: 10, ordering: DESC}) {
                     original
                     jlpt
                 }

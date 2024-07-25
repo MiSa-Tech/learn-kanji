@@ -111,7 +111,7 @@ class VocabularyRepositoryUnitTest {
         Vocabulary vocabulary = new Vocabulary("毎月", furigana, meaning, 5);
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<Vocabulary> listVocabs = vocabularyRepository.findByFurigana("まいげつ", pageable).getContent();
+        List<Vocabulary> listVocabs = vocabularyRepository.findByFurigana("いげつ", pageable).getContent();
 
         Assertions.assertEquals(1, listVocabs.size());
         Assertions.assertEquals(vocabulary.getOriginal(), listVocabs.get(0).getOriginal());
@@ -126,10 +126,10 @@ class VocabularyRepositoryUnitTest {
     }
 
     @Test
-    void whenFindByEmptyFurigana_returnEmptyList() {
+    void whenFindByEmptyFurigana_nonReturnEmptyList() {
         Pageable pageable = PageRequest.of(0, 10);
         List<Vocabulary> vocabularyList = vocabularyRepository.findByFurigana("", pageable).getContent();
-        Assertions.assertTrue(vocabularyList.isEmpty());
+        Assertions.assertFalse(vocabularyList.isEmpty());
     }
 
     @Test
@@ -140,7 +140,7 @@ class VocabularyRepositoryUnitTest {
         Vocabulary vocabulary = new Vocabulary("毎月", furigana, meaning, 5);
         Pageable pageable = PageRequest.of(0, 10);
         // when
-        List<Vocabulary> listVocabs = vocabularyRepository.findByMeaning("every month", pageable).getContent();
+        List<Vocabulary> listVocabs = vocabularyRepository.findByMeaning("onth", pageable).getContent();
 
         Assertions.assertEquals(1, listVocabs.size());
         Assertions.assertEquals(vocabulary.getOriginal(), listVocabs.get(0).getOriginal());
@@ -154,10 +154,10 @@ class VocabularyRepositoryUnitTest {
     }
 
     @Test
-    void whenFindByEmptyMeaning_returnEmptyList() {
+    void whenFindByEmptyMeaning_nonReturnEmptyList() {
         Pageable pageable = PageRequest.of(0, 10);
-        List<Vocabulary> vocabularyList = vocabularyRepository.findByMeaning(null, pageable).getContent();
-        Assertions.assertTrue(vocabularyList.isEmpty());
+        List<Vocabulary> vocabularyList = vocabularyRepository.findByMeaning("", pageable).getContent();
+        Assertions.assertFalse(vocabularyList.isEmpty());
     }
 
     @Test

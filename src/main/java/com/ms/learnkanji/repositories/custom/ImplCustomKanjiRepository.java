@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class CustomKanjiRepositoryImpl implements CustomKanjiRepository {
+public class ImplCustomKanjiRepository implements CustomKanjiRepository {
     private final SessionFactory sessionFactory;
 
     @Autowired
-    public CustomKanjiRepositoryImpl(SessionFactory sessionFactory) {
+    public ImplCustomKanjiRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

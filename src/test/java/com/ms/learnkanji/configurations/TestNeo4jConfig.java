@@ -1,7 +1,7 @@
 package com.ms.learnkanji.configurations;
 
 import com.ms.learnkanji.repositories.KanjiResultRepository;
-import com.ms.learnkanji.repositories.custom.KanjiResultRepositoryImpl;
+import com.ms.learnkanji.repositories.custom.ImplKanjiResultRepository;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.GraphDatabase;
 import org.neo4j.harness.Neo4j;
@@ -13,7 +13,7 @@ import org.springframework.data.neo4j.core.transaction.Neo4jTransactionManager;
 
 @Configuration
 @ComponentScan(basePackages = "com.ms.learnkanji.repositories",
-    includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {KanjiResultRepository.class, KanjiResultRepositoryImpl.class}),
+    includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {KanjiResultRepository.class, ImplKanjiResultRepository.class}),
         useDefaultFilters = false)
 @Profile("kanji-result-test")
 public class TestNeo4jConfig {

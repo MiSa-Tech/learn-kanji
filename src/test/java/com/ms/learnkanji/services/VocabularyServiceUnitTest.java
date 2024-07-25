@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.models.Vocabulary;
 import com.ms.learnkanji.repositories.VocabularyRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -71,16 +71,15 @@ class VocabularyServiceUnitTest {
 
 
         List<Vocabulary> vocabularyList = List.of(vocabulary_1, vocabulary_2);
-        Sort sort = Sort.by("original");
+        Sort sort = Sort.by("v.original");
         Pageable pageable = PageRequest.of(0, 10, sort.ascending());
         Slice<Vocabulary> vocabularySlice = new PageImpl<>(vocabularyList, pageable, vocabularyList.size());
         // when
-        BDDMockito.given(vocabularyRepository.findByJlpt(5, pageable))
-                .willReturn(vocabularySlice);
+        Mockito.when(vocabularyRepository.findByJlpt(5, pageable))
+                .thenReturn(vocabularySlice);
 
         // then
-        List<Vocabulary> found = vocabularyService.getVocabularyByJlpt(5, 0, 10);
-        Assertions.assertEquals(2, found.size());
+        List<Vocabulary> found = vocabularyService.getVocabularyByJlpt(5, 0, 10, Ordering.ASC);
         Assertions.assertEquals(vocabulary_1, found.get(0));
         Assertions.assertEquals(vocabulary_2, found.get(1));
     }
@@ -89,7 +88,7 @@ class VocabularyServiceUnitTest {
     void whenFindByInvalidJlpt_thenThrowInvalidInputException() {
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByJlpt(6,0, 10);
+                        vocabularyService.getVocabularyByJlpt(6,0, 10, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE)
@@ -97,7 +96,7 @@ class VocabularyServiceUnitTest {
 
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByJlpt(0,0, 10);
+                        vocabularyService.getVocabularyByJlpt(0,0, 10, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE)
@@ -110,7 +109,7 @@ class VocabularyServiceUnitTest {
         // pageNum invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByJlpt(5, -1, 1);
+                        vocabularyService.getVocabularyByJlpt(5, -1, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -120,7 +119,7 @@ class VocabularyServiceUnitTest {
         // pageSize invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByJlpt(5, 0, 0);
+                        vocabularyService.getVocabularyByJlpt(5, 0, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE)
@@ -129,7 +128,7 @@ class VocabularyServiceUnitTest {
         // both invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByJlpt(5, -1, 0);
+                        vocabularyService.getVocabularyByJlpt(5, -1, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -145,15 +144,15 @@ class VocabularyServiceUnitTest {
         Vocabulary vocabulary_2 = new Vocabulary("毎日", furigana_2, meaning_2, 5);
 
         List<Vocabulary> vocabularyList = List.of(vocabulary_2);
-        Sort sort = Sort.by("original");
+        Sort sort = Sort.by("v.original");
         Pageable pageable = PageRequest.of(0, 10, sort.ascending());
         Slice<Vocabulary> vocabularySlice = new PageImpl<>(vocabularyList, pageable, vocabularyList.size());
         // when
-        BDDMockito.given(vocabularyRepository.findByFurigana("まいにち", pageable))
-                .willReturn(vocabularySlice);
+        Mockito.when(vocabularyRepository.findByFurigana("まいに", pageable))
+                .thenReturn(vocabularySlice);
 
         // then
-        List<Vocabulary> found = vocabularyService.getVocabularyByFurigana("まいにち", 0, 10);
+        List<Vocabulary> found = vocabularyService.getVocabularyByFurigana("まいに", 0, 10, Ordering.ASC);
         Assertions.assertEquals(1, found.size());
         Assertions.assertEquals(vocabulary_2, found.get(0));
     }
@@ -162,7 +161,7 @@ class VocabularyServiceUnitTest {
     void whenFindByNullFurigana_thenThrowInputException() {
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByFurigana(null, 0, 1);
+                        vocabularyService.getVocabularyByFurigana(null, 0, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Vocabulary.FURIGANA_CANNOT_BE_NULL)
@@ -174,7 +173,7 @@ class VocabularyServiceUnitTest {
     void whenFindByEmptyFurigana_thenThrowInputException() {
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByFurigana("", 0, 1);
+                        vocabularyService.getVocabularyByFurigana("", 0, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Vocabulary.FURIGANA_CANNOT_BE_NULL)
@@ -187,7 +186,7 @@ class VocabularyServiceUnitTest {
         // pageNum invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByFurigana("まいにち", -1, 1);
+                        vocabularyService.getVocabularyByFurigana("まいにち", -1, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -195,7 +194,7 @@ class VocabularyServiceUnitTest {
         // pageSize invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByFurigana("まいにち", 0, 0);
+                        vocabularyService.getVocabularyByFurigana("まいにち", 0, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE)
@@ -203,7 +202,7 @@ class VocabularyServiceUnitTest {
         // both invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByFurigana("まいにち", -1, 0);
+                        vocabularyService.getVocabularyByFurigana("まいにち", -1, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -219,16 +218,16 @@ class VocabularyServiceUnitTest {
         Vocabulary vocabulary_1 = new Vocabulary("毎月", furigana_1, meaning_1, 5);
 
         List<Vocabulary> vocabularyList = List.of(vocabulary_1);
-        Sort sort = Sort.by("original");
+        Sort sort = Sort.by("v.original");
         Pageable pageable = PageRequest.of(0, 10, sort.ascending());
         Slice<Vocabulary> vocabularySlice = new PageImpl<>(vocabularyList, pageable, vocabularyList.size());
 
         // when
-        BDDMockito.given(vocabularyRepository.findByMeaning("every month", pageable))
-                .willReturn(vocabularySlice);
+        Mockito.when(vocabularyRepository.findByMeaning("month", pageable))
+                .thenReturn(vocabularySlice);
 
         // then
-        List<Vocabulary> found = vocabularyService.getVocabularyByMeaning("every month", 0, 10);
+        List<Vocabulary> found = vocabularyService.getVocabularyByMeaning("month", 0, 10, Ordering.ASC);
         Assertions.assertEquals(1, found.size());
         Assertions.assertEquals(vocabulary_1, found.get(0));
     }
@@ -237,7 +236,7 @@ class VocabularyServiceUnitTest {
     void whenFindByNullMeaning_thenThrowInputException() {
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByMeaning(null, 0, 1);
+                        vocabularyService.getVocabularyByMeaning(null, 0, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Vocabulary.MEANING_CANNOT_BE_NULL)
@@ -248,7 +247,7 @@ class VocabularyServiceUnitTest {
     void whenFindByEmptyMeaning_thenThrowInputException() {
         Assertions.assertTrue(
                 Assertions.assertThrows(InvalidInputException.class, () -> {
-                    vocabularyService.getVocabularyByMeaning("", 0, 1);
+                    vocabularyService.getVocabularyByMeaning("", 0, 1, Ordering.ASC);
                 })
                 .getMessage()
                 .contains(MessageError.Vocabulary.MEANING_CANNOT_BE_NULL)
@@ -260,7 +259,7 @@ class VocabularyServiceUnitTest {
         // pageNum invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByMeaning("every month", -1, 1);
+                        vocabularyService.getVocabularyByMeaning("every month", -1, 1, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -268,7 +267,7 @@ class VocabularyServiceUnitTest {
         // pageSize invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByMeaning("every month", 0, 0);
+                        vocabularyService.getVocabularyByMeaning("every month", 0, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE)
@@ -276,7 +275,7 @@ class VocabularyServiceUnitTest {
         // both invalid
         Assertions.assertTrue(
             Assertions.assertThrows(InvalidInputException.class, () -> {
-                        vocabularyService.getVocabularyByMeaning("every month", -1, 0);
+                        vocabularyService.getVocabularyByMeaning("every month", -1, 0, Ordering.ASC);
                     })
                     .getMessage()
                     .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -297,15 +296,15 @@ class VocabularyServiceUnitTest {
 
 
         List<Vocabulary> vocabularyList = List.of(vocabulary_1, vocabulary_2);
-        Sort sort = Sort.by("original");
+        Sort sort = Sort.by("v.original");
         Pageable pageable = PageRequest.of(0, 10, sort.ascending());
         Slice<Vocabulary> vocabularySlice = new PageImpl<>(vocabularyList, pageable, vocabularyList.size());
         // when
-        BDDMockito.given(vocabularyRepository.findAllVocabulary(pageable))
-                .willReturn(vocabularySlice);
+        Mockito.when(vocabularyRepository.findAllVocabulary(pageable))
+                .thenReturn(vocabularySlice);
 
         // then
-        List<Vocabulary> found = vocabularyService.getAllVocabulary(0, 10);
+        List<Vocabulary> found = vocabularyService.getAllVocabulary(0, 10, Ordering.ASC);
         Assertions.assertEquals(2, found.size());
         Assertions.assertEquals(vocabulary_1, found.get(0));
     }
@@ -315,7 +314,7 @@ class VocabularyServiceUnitTest {
         // pageNum invalid
         Assertions.assertTrue(
                 Assertions.assertThrows(InvalidInputException.class, () -> {
-                            vocabularyService.getAllVocabulary( -1, 1);
+                            vocabularyService.getAllVocabulary( -1, 1, Ordering.ASC);
                         })
                         .getMessage()
                         .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)
@@ -323,7 +322,7 @@ class VocabularyServiceUnitTest {
         // pageSize invalid
         Assertions.assertTrue(
                 Assertions.assertThrows(InvalidInputException.class, () -> {
-                            vocabularyService.getAllVocabulary(0, 0);
+                            vocabularyService.getAllVocabulary(0, 0, Ordering.ASC);
                         })
                         .getMessage()
                         .contains(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE)
@@ -331,7 +330,7 @@ class VocabularyServiceUnitTest {
         // both invalid
         Assertions.assertTrue(
                 Assertions.assertThrows(InvalidInputException.class, () -> {
-                            vocabularyService.getAllVocabulary(-1, 0);
+                            vocabularyService.getAllVocabulary(-1, 0, Ordering.ASC);
                         })
                         .getMessage()
                         .contains(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE)

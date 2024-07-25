@@ -1,6 +1,7 @@
 package com.ms.learnkanji.services.custom;
 
 import com.ms.learnkanji.commons.MessageError;
+import com.ms.learnkanji.commons.Ordering;
 import com.ms.learnkanji.exceptions.InvalidInputException;
 import com.ms.learnkanji.exceptions.NotFoundException;
 import com.ms.learnkanji.models.Vocabulary;
@@ -53,7 +54,7 @@ public class ImplVocabularyService implements VocabularyService {
     }
 
     @Override
-    public List<Vocabulary> getVocabularyByJlpt(Integer jlpt, Integer pageNum, Integer pageSize) {
+    public List<Vocabulary> getVocabularyByJlpt(Integer jlpt, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (jlpt < 1 || jlpt > 5) {
             throw new InvalidInputException(MessageError.Vocabulary.JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE);
         }
@@ -63,13 +64,14 @@ public class ImplVocabularyService implements VocabularyService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        Sort sort = Sort.by("original");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("v.original").ascending() : Sort.by("v.original").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return vocabularyRepository.findByJlpt(jlpt, pageable).getContent();
     }
 
     @Override
-    public List<Vocabulary> getVocabularyByFurigana(String furigana, Integer pageNum, Integer pageSize) {
+    public List<Vocabulary> getVocabularyByFurigana(String furigana, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (furigana == null || furigana.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.FURIGANA_CANNOT_BE_NULL);
         }
@@ -79,13 +81,13 @@ public class ImplVocabularyService implements VocabularyService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        Sort sort = Sort.by("original");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("v.original").ascending() : Sort.by("v.original").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return vocabularyRepository.findByFurigana(furigana, pageable).getContent();
     }
 
     @Override
-    public List<Vocabulary> getVocabularyByMeaning(String meaning, Integer pageNum, Integer pageSize) {
+    public List<Vocabulary> getVocabularyByMeaning(String meaning, Integer pageNum, Integer pageSize, Ordering ordering) {
         if (meaning == null || meaning.isEmpty()) {
             throw new InvalidInputException(MessageError.Vocabulary.MEANING_CANNOT_BE_NULL);
         }
@@ -95,21 +97,21 @@ public class ImplVocabularyService implements VocabularyService {
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        Sort sort = Sort.by("original");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("v.original").ascending() : Sort.by("v.original").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return vocabularyRepository.findByMeaning(meaning, pageable).getContent();
     }
 
     @Override
-    public List<Vocabulary> getAllVocabulary(Integer pageNum, Integer pageSize) {
+    public List<Vocabulary> getAllVocabulary(Integer pageNum, Integer pageSize, Ordering ordering) {
         if (pageNum < 0) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_NUM_CANNOT_BE_NEGATIVE);
         }
         if (pageSize < 1) {
             throw new InvalidInputException(MessageError.Pagination.PAGE_SIZE_CANNOT_BE_LESS_THAN_ONE);
         }
-        Sort sort = Sort.by("original");
-        Pageable pageable = PageRequest.of(pageNum, pageSize, sort.ascending());
+        Sort sort = (Ordering.ASC.equals(ordering)) ? Sort.by("v.original").ascending() : Sort.by("v.original").descending();
+        Pageable pageable = PageRequest.of(pageNum, pageSize, sort);
         return vocabularyRepository.findAllVocabulary(pageable).getContent();
     }
 

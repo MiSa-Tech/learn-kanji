@@ -7,7 +7,6 @@ public class MessageError {
         public static final String MEANING_CANNOT_BE_NULL = "Meaning cannot be null";
         public static final String VOCABULARY_CANNOT_BE_FOUND = "Vocabulary cannot be found";
         public static final String JLPT_LEVEL_CANNOT_BE_LESS_THAN_ONE_OR_GREATER_THAN_FIVE = "JLPT level cannot be less than 1 or greater than 5";
-
     }
 
     public class Kanji {
